@@ -4,7 +4,7 @@
 
 [![DOI](https://img.shields.io/badge/OSF-10.17605%2FOSF.IO%2F35B96-blue)](https://doi.org/10.17605/OSF.IO/35B96)
 
-This repository contains the sensitivity analysis conducted in response to peer review comments regarding the search strategy used in the scoping review:
+This repository contains the sensitivity analysis conducted to verify the comprehensiveness of the search strategy used in the scoping review:
 
 > **"Sexual health in neuromuscular diseases: neglected challenges revealed by a scoping review"**
 
@@ -53,7 +53,7 @@ Disease-specific terms were added:
 
 **Hausmanowa-Petrusewicz I, Borkowska J, Janczewski Z. (1983)**
 *X-linked adult form of spinal muscular atrophy.*
-Journal of Neurology. PMID: 6191009
+Journal of Neurology. [PMID: 6191009](https://pubmed.ncbi.nlm.nih.gov/6191009/)
 
 This article reports original data on sexual dysfunction (erectile dysfunction, reduced libido) and reproductive abnormalities in **Kennedy disease (SBMA)**.
 
@@ -76,8 +76,11 @@ Extended searches were also conducted in Cochrane Library and Google Scholar usi
 │   └── create_exclusion_table.R       # Final exclusion table
 ├── results/
 │   ├── FINAL_EXCLUSION_TABLE_EN.csv   # Screening decisions with justifications
-│   ├── ARTICLES_NOUVEAUX_POUR_SCREENING.csv  # Full metadata
-│   └── [other intermediate results]
+│   ├── pubmed_original_search.csv     # Original search results (791 articles)
+│   ├── pubmed_new_articles_raw.csv    # New articles from extended search (301)
+│   ├── pubmed_new_high_relevance.csv  # High relevance articles (18)
+│   ├── new_articles_for_screening.csv # Articles for final screening (16)
+│   └── [filtering reports]
 └── data/
     └── equation.txt                   # Original search equations
 ```
