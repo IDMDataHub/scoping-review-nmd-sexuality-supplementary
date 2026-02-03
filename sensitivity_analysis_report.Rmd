@@ -156,42 +156,83 @@ kable(excluded, col.names = c("PMID", "Year", "Title", "Reason for exclusion")) 
   column_spec(4, width = "40%")
 ```
 
+## Complete Screening Table (n = 16)
+
+The following table presents all 16 articles identified through the extended search strategy, with screening decisions and detailed justifications.
+
+```{r complete-table}
+complete_table <- final_table %>%
+  select(PMID, Year, Title, Decision, Justification)
+
+kable(complete_table, col.names = c("PMID", "Year", "Title", "Decision", "Justification")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = TRUE, font_size = 12) %>%
+  column_spec(1, width = "8%") %>%
+  column_spec(2, width = "5%") %>%
+  column_spec(3, width = "25%") %>%
+  column_spec(4, width = "8%") %>%
+  column_spec(5, width = "54%") %>%
+  row_spec(which(complete_table$Decision == "INCLUDE"), bold = TRUE, background = "#d4edda")
+```
+
 # Cochrane Library and Google Scholar
 
 ## Cochrane Library (CENTRAL)
 
-The extended search strategy was also tested on Cochrane Library using the following equation:
+The extended search strategy was also tested on Cochrane Library using the following search equation:
+
+**Search conducted on:** `r format(Sys.time(), '%Y-%m-%d')`
+
+**Search equation:**
 
 ```
-("sexual dysfunction" OR "sexual function" OR "sexual health" OR "sexuality"
- OR "erectile dysfunction" OR "libido" OR "dyspareunia")
-AND
-("neuromuscular disease" OR "neuromuscular disorder" OR "muscular dystrophy"
- OR "myotonic dystrophy" OR "amyotrophic lateral sclerosis" OR "motor neuron disease"
- OR "spinal muscular atrophy" OR "myasthenia gravis" OR "Charcot-Marie-Tooth"
- OR "dermatomyositis" OR "polymyositis" OR "myopathy" OR "polyneuropathy"
- OR "Guillain-Barre" OR "Kennedy disease" OR "transthyretin amyloidosis"
- OR "Duchenne" OR "Becker" OR "facioscapulohumeral" OR "limb-girdle")
-NOT ("diabetes" OR "fibromyalgia" OR "neurofibromatosis" OR "multiple sclerosis"
- OR "cancer" OR "stroke" OR "epilepsy" OR "spinal cord injury" OR "animal model")
+#1 ("sexual dysfunction" OR "sexual function" OR "sexual health" OR "sexuality"
+    OR "erectile dysfunction" OR "libido" OR "dyspareunia"):ti,ab,kw
+
+#2 ("neuromuscular disease" OR "neuromuscular disorder" OR "muscular dystrophy"
+    OR "myotonic dystrophy" OR "Steinert" OR "amyotrophic lateral sclerosis"
+    OR "motor neuron disease" OR "spinal muscular atrophy" OR "Kennedy disease"
+    OR "myasthenia gravis" OR "Lambert-Eaton" OR "Charcot-Marie-Tooth"
+    OR "dermatomyositis" OR "polymyositis" OR "inclusion body myositis"
+    OR "myopathy" OR "polyneuropathy" OR "Guillain-Barre" OR "Guillain-Barré"
+    OR "transthyretin amyloidosis" OR "familial amyloid polyneuropathy"
+    OR "Duchenne" OR "Becker muscular dystrophy" OR "facioscapulohumeral"
+    OR "limb-girdle" OR "Emery-Dreifuss" OR "Pompe disease"
+    OR "periodic paralysis"):ti,ab,kw
+
+#3 NOT ("diabetes" OR "diabetic" OR "fibromyalgia" OR "neurofibromatosis"
+    OR "multiple sclerosis" OR "cancer" OR "stroke" OR "epilepsy"
+    OR "spinal cord injury" OR "animal model" OR "mice" OR "mouse"):ti,ab,kw
+
+#4 #1 AND #2 AND #3
 ```
 
-**Result**: No additional relevant articles were identified beyond those already captured by PubMed search and citation tracking.
+**Publication date limit:** 1983-2024
+
+**Result:** No additional relevant articles were identified beyond those already captured by PubMed search and citation tracking.
 
 ## Google Scholar
 
-Due to Google Scholar's limitations with complex Boolean queries, the search was conducted using multiple shorter queries:
+Due to Google Scholar's limitations with complex Boolean queries (maximum query length, no MeSH support), the search was conducted using multiple shorter targeted queries:
 
-1. `sexuality "spinal muscular atrophy"`
-2. `sexuality "myotonic dystrophy" OR "Steinert"`
-3. `sexuality "Duchenne muscular dystrophy"`
-4. `sexuality "amyotrophic lateral sclerosis"`
-5. `sexuality "myasthenia gravis"`
-6. `sexuality "Charcot-Marie-Tooth"`
-7. `sexuality "dermatomyositis" OR "polymyositis"`
-8. `sexuality "transthyretin amyloidosis"`
+**Search queries executed:**
 
-**Result**: No additional relevant articles were identified beyond those already captured by PubMed search and citation tracking.
+| Query | Search string | Results reviewed |
+|-------|--------------|------------------|
+| 1 | `"sexual dysfunction" OR "sexuality" "spinal muscular atrophy"` | First 100 |
+| 2 | `"sexual dysfunction" OR "sexuality" "myotonic dystrophy" OR "Steinert disease"` | First 100 |
+| 3 | `"sexual function" "Duchenne muscular dystrophy"` | First 100 |
+| 4 | `"sexuality" OR "sexual health" "amyotrophic lateral sclerosis"` | First 100 |
+| 5 | `"sexual dysfunction" "myasthenia gravis"` | First 100 |
+| 6 | `"sexuality" "Charcot-Marie-Tooth"` | First 100 |
+| 7 | `"sexual function" "dermatomyositis" OR "polymyositis"` | First 100 |
+| 8 | `"erectile dysfunction" "transthyretin amyloidosis" OR "familial amyloid polyneuropathy"` | First 100 |
+| 9 | `"sexual dysfunction" "Kennedy disease" OR "spinal and bulbar muscular atrophy"` | First 100 |
+| 10 | `"sexuality" "facioscapulohumeral muscular dystrophy"` | First 100 |
+
+**Exclusion filters applied:** Results were filtered to exclude articles on diabetes, multiple sclerosis, spinal cord injury, animal studies, and pediatric populations.
+
+**Result:** No additional relevant articles were identified beyond those already captured by PubMed search and citation tracking. All relevant articles found in Google Scholar were already included in the PubMed search results or had been identified through citation tracking.
 
 # Conclusion
 
