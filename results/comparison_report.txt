@@ -1,0 +1,28 @@
+=================================================================
+COMPARISON REPORT - PUBMED SEARCH STRATEGIES
+Version 3 - Without ambiguous acronyms
+=================================================================
+
+Execution date: 2026-02-03
+Period covered: 1983-2024
+
+ACRONYMS REMOVED (ambiguous):
+- SMA (Smooth Muscle Actin vs Spinal Muscular Atrophy)
+- ALS (multiple meanings)
+- BMD (Bone Mineral Density vs Becker Muscular Dystrophy)
+- MG (Magnesium vs Myasthenia Gravis)
+- FAP (Familial Adenomatous Polyposis vs Familial Amyloid Polyneuropathy)
+- IBM (company vs Inclusion Body Myositis)
+- DMD, FSHD, LGMD, EDMD, DM1, DM2, LEMS, CMT, CIDP, GBS, HNPP
+
+--- RESULTS ---
+Original equation    : 791 articles
+Extended equation    : 1082 articles
+NEW articles (X)     : 301 articles
+
+--- FILES GENERATED ---
+1. pubmed_original_equation.csv  : 791 articles
+2. pubmed_NEW_articles.csv       : 301 articles
+3. comparison_report.txt         : this file
+
+=================================================================

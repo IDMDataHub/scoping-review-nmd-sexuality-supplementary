@@ -1,0 +1,31 @@
+=================================================================
+FINAL REPORT - NEW ARTICLES FOR SCREENING
+=================================================================
+
+Date: 2026-02-03
+
+--- CONTEXT ---
+Original equation : 'neuromuscular' terms only
+Extended equation : + categories (myopathy, dystrophy, etc.)
+                    + specific diseases (full names)
+
+--- RESULTS ---
+High relevance articles (NMD term in title) : 18
+Duplicates with the 26 included articles    : 2
+TRULY new articles to screen                : 16
+
+--- FILE GENERATED ---
+NEW_ARTICLES_FOR_SCREENING.csv
+
+Screening columns:
+- Screening_Decision : INCLUDE / EXCLUDE
+- Screening_Reason   : reason for inclusion/exclusion
+- Relevance_Score    : 1-5 (relevance to review)
+- Notes              : free comments
+
+--- CONCLUSION ---
+The extended search strategy identified 16 additional articles
+potentially relevant, which were not captured by the original equation
+using only 'neuromuscular disease/disorder'.
+
+=================================================================

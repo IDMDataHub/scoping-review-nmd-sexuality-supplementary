@@ -1,0 +1,23 @@
+=================================================================
+FILTERING REPORT - RELEVANT NMD ARTICLES
+=================================================================
+
+Date: 2026-02-03
+
+--- RESULTS ---
+New articles (raw)       : 301
+RELEVANT articles        : 142
+Excluded articles        : 159
+
+--- FILTERING CRITERIA ---
+Inclusion: presence of at least one specific NMD term
+(duchenne, becker, myotonic dystrophy, ALS, SMA, myasthenia gravis, etc.)
+
+Exclusion: articles on secondary myopathies/neuropathies
+(diabetic, drug-induced, HIV, etc.) without specific NMD term
+
+--- FILES GENERATED ---
+1. pubmed_NEW_RELEVANT.csv : 142 articles
+2. pubmed_NEW_EXCLUDED.csv : 159 articles (to verify)
+
+=================================================================
