@@ -1,100 +1,100 @@
 #!/usr/bin/env Rscript
 # ==============================================================================
-# Script R : Filtrage des articles pertinents NMD
-# Applique un filtre de pertinence sur les nouveaux articles
+# R Script: Filtering relevant NMD articles
+# Applies a relevance filter on new articles
 # ==============================================================================
 
 library(dplyr)
 library(stringr)
 
-# Charger les nouveaux articles
-articles <- read.csv("/home/ffer/article_audrey/output_search/pubmed_NOUVEAUX_articles.csv",
+# Load new articles
+articles <- read.csv("/home/ffer/article_audrey/output_search/pubmed_NEW_articles.csv",
                      stringsAsFactors = FALSE)
 
-cat("Articles en entrée:", nrow(articles), "\n\n")
+cat("Input articles:", nrow(articles), "\n\n")
 
 # ==============================================================================
-# DÉFINITION DES CRITÈRES DE PERTINENCE
+# RELEVANCE CRITERIA DEFINITION
 # ==============================================================================
 
-# Termes NMD SPÉCIFIQUES (doivent être présents dans titre, abstract OU MeSH)
-termes_nmd_specifiques <- c(
-  # Dystrophies musculaires
+# SPECIFIC NMD terms (must be present in title, abstract OR MeSH)
+specific_nmd_terms <- c(
+  # Muscular dystrophies
   "duchenne", "becker muscular", "facioscapulohumeral", "limb-girdle", "limb girdle",
   "emery-dreifuss", "oculopharyngeal", "congenital muscular dystrophy",
   "distal muscular dystrophy", "distal myopathy",
 
-  # Dystrophie myotonique
+  # Myotonic dystrophy
   "myotonic dystrophy", "steinert disease", "steinert's disease",
 
-  # Neurone moteur
+  # Motor neuron
   "amyotrophic lateral sclerosis", "motor neuron disease", "motor neurone disease",
   "spinal muscular atrophy", "kennedy disease", "spinal and bulbar muscular atrophy",
   "primary lateral sclerosis",
 
-  # Jonction NM
+  # NM junction
 
   "myasthenia gravis", "lambert-eaton", "congenital myasthenic syndrome",
 
-  # Neuropathies héréditaires
+  # Hereditary neuropathies
   "charcot-marie-tooth", "hereditary motor and sensory neuropathy",
   "hereditary neuropathy with liability", "HNPP",
   "chronic inflammatory demyelinating polyneuropathy",
   "chronic inflammatory demyelinating polyradiculoneuropathy",
   "guillain-barre syndrome", "guillain-barré",
 
-  # Amyloidoses NM
+  # NM amyloidosis
   "transthyretin amyloidosis", "ATTR amyloidosis", "hereditary transthyretin",
   "familial amyloid polyneuropathy", "amyloid neuropathy",
 
-  # Myopathies spécifiques
+  # Specific myopathies
   "inflammatory myopathy", "inflammatory myopathies",
   "dermatomyositis", "polymyositis", "inclusion body myositis",
   "immune-mediated necrotizing myopathy", "antisynthetase syndrome",
 
-  # Myopathies métaboliques
+  # Metabolic myopathies
   "pompe disease", "acid maltase deficiency", "McArdle disease",
   "glycogen storage disease type II", "glycogen storage disease type V",
 
-  # Myopathies congénitales
+  # Congenital myopathies
   "congenital myopathy", "congenital myopathies", "nemaline myopathy",
   "centronuclear myopathy", "myotubular myopathy",
 
-  # Canalopathies
+  # Channelopathies
   "periodic paralysis", "myotonia congenita", "paramyotonia congenita",
 
-  # Termes génériques NMD (moins spécifiques mais pertinents)
+  # Generic NMD terms (less specific but relevant)
   "neuromuscular disease", "neuromuscular disorder", "muscular dystrophy"
 )
 
-# Termes d'EXCLUSION (articles à exclure si ces termes dominent)
-termes_exclusion <- c(
-  # Myopathies secondaires/médicamenteuses
+# EXCLUSION terms (articles to exclude if these terms dominate)
+exclusion_terms <- c(
+  # Secondary/drug-induced myopathies
   "statin-induced", "statin myopathy", "drug-induced myopathy",
   "toxic myopathy", "alcoholic myopathy",
 
-  # Neuropathies non-NMD
+  # Non-NMD neuropathies
   "diabetic neuropathy", "diabetic polyneuropathy",
   "HIV neuropathy", "HIV-associated",
   "chemotherapy-induced", "chemotherapy neuropathy",
   "alcoholic neuropathy",
 
-  # ÉTUDES ANIMALES
+  # ANIMAL STUDIES
   "animal model", "mouse model", "rat model", "mice", "mouse", "murine",
   "rodent", "canine", "dog model", "porcine", "pig model", "zebrafish",
   "drosophila", "c. elegans", "animal study", "animal experiment",
   "poultry", "chicken", "broiler", "bovine", "ovine",
 
-  # Autres contextes non pertinents
+  # Other non-relevant contexts
   "in vitro", "cell line", "cell culture"
 )
 
 # ==============================================================================
-# FONCTION DE FILTRAGE
+# FILTERING FUNCTION
 # ==============================================================================
 
 is_relevant_nmd <- function(title, abstract, mesh) {
-  # Combiner tous les textes
+  # Combine all text
   all_text <- tolower(paste(
     ifelse(is.na(title), "", title),
     ifelse(is.na(abstract), "", abstract),
@@ -102,32 +102,32 @@ is_relevant_nmd <- function(title, abstract, mesh) {
     sep = " "
   ))
 
-  # Vérifier présence de termes NMD spécifiques
-  has_nmd_term <- any(sapply(termes_nmd_specifiques, function(t) {
+  # Check presence of specific NMD terms
+  has_nmd_term <- any(sapply(specific_nmd_terms, function(t) {
     grepl(tolower(t), all_text, fixed = TRUE)
   }))
 
-  # Vérifier absence de termes d'exclusion dominants
-  # (on tolère leur présence si un terme NMD spécifique est aussi présent)
-  exclusion_count <- sum(sapply(termes_exclusion, function(t) {
+  # Check absence of dominant exclusion terms
+  # (tolerated if a specific NMD term is also present)
+  exclusion_count <- sum(sapply(exclusion_terms, function(t) {
     grepl(tolower(t), all_text, fixed = TRUE)
   }))
 
-  # Logique de décision
+  # Decision logic
   if (has_nmd_term) {
-    return(TRUE)  # Pertinent si terme NMD spécifique trouvé
+    return(TRUE)  # Relevant if specific NMD term found
   } else if (exclusion_count > 0) {
-    return(FALSE) # Non pertinent si exclusion sans NMD spécifique
+    return(FALSE) # Not relevant if exclusion without specific NMD
   } else {
-    return(FALSE) # Par défaut non pertinent si aucun terme NMD spécifique
+    return(FALSE) # Default not relevant if no specific NMD term
   }
 }
 
 # ==============================================================================
-# APPLICATION DU FILTRE
+# APPLY FILTER
 # ==============================================================================
 
-cat("Application du filtre de pertinence...\n")
+cat("Applying relevance filter...\n")
 
 articles$is_relevant <- mapply(
   is_relevant_nmd,
@@ -136,20 +136,20 @@ articles$is_relevant <- mapply(
   articles$MeSH
 )
 
-# Séparer les articles
-articles_pertinents <- articles %>% filter(is_relevant == TRUE)
-articles_exclus <- articles %>% filter(is_relevant == FALSE)
+# Separate articles
+relevant_articles <- articles %>% filter(is_relevant == TRUE)
+excluded_articles <- articles %>% filter(is_relevant == FALSE)
 
-cat("\n--- RÉSULTATS DU FILTRAGE ---\n")
-cat("Articles pertinents NMD :", nrow(articles_pertinents), "\n")
-cat("Articles exclus         :", nrow(articles_exclus), "\n")
+cat("\n--- FILTERING RESULTS ---\n")
+cat("Relevant NMD articles :", nrow(relevant_articles), "\n")
+cat("Excluded articles     :", nrow(excluded_articles), "\n")
 
 # ==============================================================================
-# STATISTIQUES SUR LES ARTICLES PERTINENTS
+# STATISTICS ON RELEVANT ARTICLES
 # ==============================================================================
 
-if (nrow(articles_pertinents) > 0) {
-  cat("\n--- MALADIES DÉTECTÉES (articles pertinents) ---\n")
+if (nrow(relevant_articles) > 0) {
+  cat("\n--- DISEASES DETECTED (relevant articles) ---\n")
 
   keywords_check <- c(
     "duchenne", "becker", "facioscapulohumeral", "limb-girdle",
@@ -164,16 +164,16 @@ if (nrow(articles_pertinents) > 0) {
   )
 
   for (kw in keywords_check) {
-    n <- sum(grepl(kw, paste(articles_pertinents$Title, articles_pertinents$Abstract),
+    n <- sum(grepl(kw, paste(relevant_articles$Title, relevant_articles$Abstract),
                    ignore.case = TRUE))
     if (n > 0) cat("  ", kw, ":", n, "\n")
   }
 
-  cat("\n--- RÉPARTITION PAR ANNÉE ---\n")
-  print(table(articles_pertinents$Year))
+  cat("\n--- DISTRIBUTION BY YEAR ---\n")
+  print(table(relevant_articles$Year))
 
-  cat("\n--- TOP 10 JOURNAUX ---\n")
-  print(head(sort(table(articles_pertinents$Journal), decreasing = TRUE), 10))
+  cat("\n--- TOP 10 JOURNALS ---\n")
+  print(head(sort(table(relevant_articles$Journal), decreasing = TRUE), 10))
 }
 
 # ==============================================================================
@@ -182,58 +182,54 @@ if (nrow(articles_pertinents) > 0) {
 
 output_dir <- "/home/ffer/article_audrey/output_search"
 
-# Export articles pertinents
+# Export relevant articles
 write.csv(
-  articles_pertinents %>% select(-is_relevant),
-  file.path(output_dir, "pubmed_NOUVEAUX_PERTINENTS.csv"),
+  relevant_articles %>% select(-is_relevant),
+  file.path(output_dir, "pubmed_NEW_RELEVANT.csv"),
   row.names = FALSE,
   fileEncoding = "UTF-8"
 )
 
-# Export articles exclus (pour vérification)
+# Export excluded articles (for verification)
 write.csv(
-  articles_exclus %>% select(-is_relevant),
-  file.path(output_dir, "pubmed_NOUVEAUX_EXCLUS.csv"),
+  excluded_articles %>% select(-is_relevant),
+  file.path(output_dir, "pubmed_NEW_EXCLUDED.csv"),
   row.names = FALSE,
   fileEncoding = "UTF-8"
 )
 
-# Mise à jour du rapport
-rapport <- paste0(
+# Update report
+report <- paste0(
   "=================================================================\n",
-  "RAPPORT DE FILTRAGE - ARTICLES PERTINENTS NMD\n",
+  "FILTERING REPORT - RELEVANT NMD ARTICLES\n",
   "=================================================================\n",
   "\n",
-  "Date : ", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n",
+  "Date: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n",
   "\n",
-  "--- RÉSULTATS ---\n",
-  "Articles nouveaux (bruts)      : ", nrow(articles), "\n",
-  "Articles PERTINENTS (filtrés)  : ", nrow(articles_pertinents), "\n",
-  "Articles exclus                : ", nrow(articles_exclus), "\n",
+  "--- RESULTS ---\n",
+  "New articles (raw)       : ", nrow(articles), "\n",
+  "RELEVANT articles        : ", nrow(relevant_articles), "\n",
+  "Excluded articles        : ", nrow(excluded_articles), "\n",
   "\n",
-  "--- CRITÈRES DE FILTRAGE ---\n",
-  "Inclusion : présence d'au moins un terme NMD spécifique\n",
+  "--- FILTERING CRITERIA ---\n",
+  "Inclusion: presence of at least one specific NMD term\n",
   "(duchenne, becker, myotonic dystrophy, ALS, SMA, myasthenia gravis, etc.)\n",
   "\n",
-  "Exclusion : articles sur myopathies/neuropathies secondaires\n",
-  "(diabétiques, médicamenteuses, HIV, etc.) sans terme NMD spécifique\n",
+  "Exclusion: articles on secondary myopathies/neuropathies\n",
+  "(diabetic, drug-induced, HIV, etc.) without specific NMD term\n",
   "\n",
-  "--- FICHIERS GÉNÉRÉS ---\n",
-  "1. pubmed_NOUVEAUX_PERTINENTS.csv : ", nrow(articles_pertinents), " articles\n",
-  "2. pubmed_NOUVEAUX_EXCLUS.csv     : ", nrow(articles_exclus), " articles (à vérifier)\n",
-  "\n",
-  "--- POUR LE REVIEWER ---\n",
-  "X = ", nrow(articles_pertinents), " articles additionnels pertinents identifiés\n",
-  "Y = [à compléter après screening manuel]\n",
+  "--- FILES GENERATED ---\n",
+  "1. pubmed_NEW_RELEVANT.csv : ", nrow(relevant_articles), " articles\n",
+  "2. pubmed_NEW_EXCLUDED.csv : ", nrow(excluded_articles), " articles (to verify)\n",
   "\n",
   "=================================================================\n"
 )
 
-writeLines(rapport, file.path(output_dir, "rapport_filtrage.txt"))
+writeLines(report, file.path(output_dir, "filtering_report.txt"))
 
-cat("\n\n--- FICHIERS EXPORTÉS ---\n")
-cat("- pubmed_NOUVEAUX_PERTINENTS.csv :", nrow(articles_pertinents), "articles\n")
-cat("- pubmed_NOUVEAUX_EXCLUS.csv     :", nrow(articles_exclus), "articles\n")
-cat("- rapport_filtrage.txt\n")
+cat("\n\n--- FILES EXPORTED ---\n")
+cat("- pubmed_NEW_RELEVANT.csv :", nrow(relevant_articles), "articles\n")
+cat("- pubmed_NEW_EXCLUDED.csv :", nrow(excluded_articles), "articles\n")
+cat("- filtering_report.txt\n")
 
-cat("\n>>> FILTRAGE TERMINÉ <<<\n")
+cat("\n>>> FILTERING COMPLETED <<<\n")
