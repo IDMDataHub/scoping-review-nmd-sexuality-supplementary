@@ -1,10 +1,10 @@
 #!/usr/bin/env Rscript
 # ==============================================================================
-# Script R : Comparaison des stratégies de recherche PubMed
+# R Script: PubMed Search Strategy Comparison
 # Scoping Review - Sexual health in neuromuscular diseases
 #
-# Version 3 : SANS acronymes ambigus (SMA, ALS, BMD, MG, FAP, IBM, etc.)
-#             Uniquement formes longues pour éviter les faux positifs
+# Version 3: WITHOUT ambiguous acronyms (SMA, ALS, BMD, MG, FAP, IBM, etc.)
+#            Only full-length disease names to avoid false positives
 # ==============================================================================
 
 library(rentrez)
@@ -13,11 +13,11 @@ library(tidyr)
 library(xml2)
 
 # ==============================================================================
-# 1. DÉFINITION DES BLOCS DE RECHERCHE
+# 1. SEARCH BLOCK DEFINITIONS
 # ==============================================================================
 
-# --- Bloc SEXUALITÉ (commun) ---
-bloc_sexualite <- '(
+# --- SEXUALITY block (common) ---
+sexuality_block <- '(
   "sexual behaviour"[MeSH Terms] OR
   "sexuality"[MeSH Terms] OR
   "sexual dysfunction, physiological"[MeSH Terms] OR
@@ -34,8 +34,8 @@ bloc_sexualite <- '(
   "sexuality"[Title/Abstract]
 )'
 
-# --- Bloc EXCLUSIONS (commun) ---
-bloc_exclusions <- 'NOT (
+# --- EXCLUSIONS block (common) ---
+exclusions_block <- 'NOT (
   "neurofibromatosis"[MeSH Terms] OR
   "diabetes mellitus"[MeSH Terms] OR
   "fibromyalgia"[MeSH Terms] OR
@@ -44,11 +44,11 @@ bloc_exclusions <- 'NOT (
   "mouse"[Title/Abstract]
 )'
 
-# --- Filtre période ---
-filtre_date <- 'AND ("1983/01/01"[Date - Publication] : "2024/12/31"[Date - Publication])'
+# --- Date filter ---
+date_filter <- 'AND ("1983/01/01"[Date - Publication] : "2024/12/31"[Date - Publication])'
 
-# --- Bloc NMD ORIGINAL ---
-bloc_nmd_original <- '(
+# --- ORIGINAL NMD block ---
+nmd_block_original <- '(
   "neuromuscular diseases"[MeSH Terms] OR
   "neuromuscular diseases"[All Fields] OR
   "neuromuscular disorders"[All Fields] OR
@@ -57,11 +57,11 @@ bloc_nmd_original <- '(
 )'
 
 # ==============================================================================
-# BLOCS NMD ÉTENDUS - VERSION CORRIGÉE (SANS ACRONYMES AMBIGUS)
+# EXTENDED NMD BLOCKS - CORRECTED VERSION (WITHOUT AMBIGUOUS ACRONYMS)
 # ==============================================================================
 
-# Groupe 1 : Umbrella + Myopathies générales
-bloc_nmd_ext_1 <- '(
+# Group 1: Umbrella + General myopathies
+nmd_block_ext_1 <- '(
   "neuromuscular diseases"[MeSH Terms] OR
   "neuromuscular disease"[Title/Abstract] OR
   "neuromuscular disorder"[Title/Abstract] OR
@@ -73,8 +73,8 @@ bloc_nmd_ext_1 <- '(
   "mitochondrial myopathy"[Title/Abstract] OR "Mitochondrial Myopathies"[MeSH Terms]
 )'
 
-# Groupe 2 : Myosites et inflammatoires (SANS "IBM" ambigu)
-bloc_nmd_ext_2 <- '(
+# Group 2: Myositis and inflammatory (WITHOUT ambiguous "IBM")
+nmd_block_ext_2 <- '(
   "myositis"[MeSH Terms] OR
   "inflammatory myopathy"[Title/Abstract] OR "inflammatory myopathies"[Title/Abstract] OR
   "dermatomyositis"[Title/Abstract] OR "Dermatomyositis"[MeSH Terms] OR
@@ -85,8 +85,8 @@ bloc_nmd_ext_2 <- '(
   "antisynthetase syndrome"[Title/Abstract]
 )'
 
-# Groupe 3 : Neurone moteur (SANS "ALS" et "SMA" ambigus - formes longues uniquement)
-bloc_nmd_ext_3 <- '(
+# Group 3: Motor neuron (WITHOUT ambiguous "ALS" and "SMA" - full names only)
+nmd_block_ext_3 <- '(
   "motor neuron disease"[Title/Abstract] OR "motor neurone disease"[Title/Abstract] OR
   "Motor Neuron Disease"[MeSH Terms] OR
   "amyotrophic lateral sclerosis"[Title/Abstract] OR "Amyotrophic Lateral Sclerosis"[MeSH Terms] OR
@@ -96,8 +96,8 @@ bloc_nmd_ext_3 <- '(
   "primary lateral sclerosis"[Title/Abstract]
 )'
 
-# Groupe 4 : Neuropathies périphériques (SANS acronymes ambigus)
-bloc_nmd_ext_4 <- '(
+# Group 4: Peripheral neuropathies (WITHOUT ambiguous acronyms)
+nmd_block_ext_4 <- '(
   "peripheral neuropathy"[Title/Abstract] OR "peripheral neuropathies"[Title/Abstract] OR
   "polyneuropathy"[Title/Abstract] OR "polyneuropathies"[Title/Abstract] OR
   "Polyneuropathies"[MeSH Terms] OR
@@ -111,8 +111,8 @@ bloc_nmd_ext_4 <- '(
   "multifocal motor neuropathy"[Title/Abstract]
 )'
 
-# Groupe 5 : Amyloidoses (SANS "FAP" ambigu - forme longue uniquement)
-bloc_nmd_ext_5 <- '(
+# Group 5: Amyloidosis (WITHOUT ambiguous "FAP" - full name only)
+nmd_block_ext_5 <- '(
   "transthyretin amyloidosis"[Title/Abstract] OR
   "ATTR amyloidosis"[Title/Abstract] OR
   "hereditary transthyretin amyloidosis"[Title/Abstract] OR
@@ -121,8 +121,8 @@ bloc_nmd_ext_5 <- '(
   "amyloid neuropathy"[Title/Abstract]
 )'
 
-# Groupe 6 : Jonction neuromusculaire (SANS "MG" et "LEMS" ambigus)
-bloc_nmd_ext_6 <- '(
+# Group 6: Neuromuscular junction (WITHOUT ambiguous "MG" and "LEMS")
+nmd_block_ext_6 <- '(
   "neuromuscular junction disease"[Title/Abstract] OR
   "Neuromuscular Junction Diseases"[MeSH Terms] OR
   "myasthenia gravis"[Title/Abstract] OR "Myasthenia Gravis"[MeSH Terms] OR
@@ -131,8 +131,8 @@ bloc_nmd_ext_6 <- '(
   "Myasthenic Syndromes, Congenital"[MeSH Terms]
 )'
 
-# Groupe 7 : Dystrophie myotonique et canalopathies (SANS "DM1" "DM2" ambigus)
-bloc_nmd_ext_7 <- '(
+# Group 7: Myotonic dystrophy and channelopathies (WITHOUT ambiguous "DM1" "DM2")
+nmd_block_ext_7 <- '(
   "myotonic dystrophy"[Title/Abstract] OR "Myotonic Dystrophy"[MeSH Terms] OR
   "Steinert disease"[Title/Abstract] OR
   "myotonia congenita"[Title/Abstract] OR "Myotonia Congenita"[MeSH Terms] OR
@@ -143,8 +143,8 @@ bloc_nmd_ext_7 <- '(
   "muscle channelopathy"[Title/Abstract] OR "muscular channelopathy"[Title/Abstract]
 )'
 
-# Groupe 8 : Dystrophies spécifiques (SANS "DMD" "BMD" "FSHD" "LGMD" "EDMD" ambigus)
-bloc_nmd_ext_8 <- '(
+# Group 8: Specific dystrophies (WITHOUT ambiguous "DMD" "BMD" "FSHD" "LGMD" "EDMD")
+nmd_block_ext_8 <- '(
   "Duchenne muscular dystrophy"[Title/Abstract] OR "Muscular Dystrophy, Duchenne"[MeSH Terms] OR
   "Becker muscular dystrophy"[Title/Abstract] OR
   "facioscapulohumeral muscular dystrophy"[Title/Abstract] OR "Muscular Dystrophy, Facioscapulohumeral"[MeSH Terms] OR
@@ -156,8 +156,8 @@ bloc_nmd_ext_8 <- '(
   "congenital muscular dystrophy"[Title/Abstract]
 )'
 
-# Groupe 9 : Myopathies métaboliques
-bloc_nmd_ext_9 <- '(
+# Group 9: Metabolic myopathies
+nmd_block_ext_9 <- '(
   "Pompe disease"[Title/Abstract] OR "Glycogen Storage Disease Type II"[MeSH Terms] OR
   "acid maltase deficiency"[Title/Abstract] OR
   "McArdle disease"[Title/Abstract] OR "Glycogen Storage Disease Type V"[MeSH Terms] OR
@@ -165,7 +165,7 @@ bloc_nmd_ext_9 <- '(
 )'
 
 # ==============================================================================
-# 2. FONCTIONS
+# 2. FUNCTIONS
 # ==============================================================================
 
 clean_query <- function(q) {
@@ -174,22 +174,22 @@ clean_query <- function(q) {
   return(q)
 }
 
-search_pubmed_pmids <- function(query, description = "Recherche") {
+search_pubmed_pmids <- function(query, description = "Search") {
   query <- clean_query(query)
   cat("  ->", description, "... ")
 
   tryCatch({
     search_result <- entrez_search(db = "pubmed", term = query, retmax = 10000)
-    cat(search_result$count, "résultats\n")
+    cat(search_result$count, "results\n")
     Sys.sleep(0.5)
     return(search_result$ids)
   }, error = function(e) {
-    cat("ERREUR:", e$message, "\n")
+    cat("ERROR:", e$message, "\n")
     return(c())
   })
 }
 
-fetch_pubmed_details <- function(pmids, description = "Récupération") {
+fetch_pubmed_details <- function(pmids, description = "Fetching") {
   if (length(pmids) == 0) return(data.frame())
 
   cat("\n", description, ":", length(pmids), "articles\n")
@@ -201,7 +201,7 @@ fetch_pubmed_details <- function(pmids, description = "Récupération") {
     batch_end <- min(i + batch_size - 1, length(pmids))
     batch_pmids <- pmids[i:batch_end]
 
-    cat("  Métadonnées", i, "-", batch_end, "sur", length(pmids), "\n")
+    cat("  Metadata", i, "-", batch_end, "of", length(pmids), "\n")
 
     tryCatch({
       fetch_result <- entrez_fetch(db = "pubmed", id = batch_pmids, rettype = "xml", parsed = FALSE)
@@ -258,117 +258,117 @@ fetch_pubmed_details <- function(pmids, description = "Récupération") {
         all_records[[length(all_records) + 1]] <- record
       }
     }, error = function(e) {
-      cat("  ERREUR batch:", e$message, "\n")
+      cat("  ERROR batch:", e$message, "\n")
     })
 
     Sys.sleep(0.5)
   }
 
   df <- bind_rows(all_records)
-  cat("  -> Terminé:", nrow(df), "enregistrements\n")
+  cat("  -> Done:", nrow(df), "records\n")
   return(df)
 }
 
 # ==============================================================================
-# 3. EXÉCUTION DES RECHERCHES
+# 3. SEARCH EXECUTION
 # ==============================================================================
 
 cat("\n")
 cat("################################################################\n")
-cat("# COMPARAISON DES STRATÉGIES DE RECHERCHE PUBMED              #\n")
-cat("# Version 3 - SANS ACRONYMES AMBIGUS                          #\n")
+cat("# PUBMED SEARCH STRATEGY COMPARISON                            #\n")
+cat("# Version 3 - WITHOUT AMBIGUOUS ACRONYMS                       #\n")
 cat("# Date:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "              #\n")
 cat("################################################################\n")
 
-# --- ÉQUATION ORIGINALE ---
+# --- ORIGINAL EQUATION ---
 cat("\n\n========================================\n")
-cat("ÉQUATION ORIGINALE\n")
+cat("ORIGINAL EQUATION\n")
 cat("========================================\n")
 
-eq_original <- paste(bloc_sexualite, "AND", bloc_nmd_original, bloc_exclusions, filtre_date)
-pmids_original <- search_pubmed_pmids(eq_original, "Recherche complète")
+eq_original <- paste(sexuality_block, "AND", nmd_block_original, exclusions_block, date_filter)
+pmids_original <- search_pubmed_pmids(eq_original, "Full search")
 
-# --- ÉQUATIONS ÉTENDUES (par groupe) ---
+# --- EXTENDED EQUATIONS (by group) ---
 cat("\n\n========================================\n")
-cat("ÉQUATIONS ÉTENDUES (par groupes - sans acronymes ambigus)\n")
+cat("EXTENDED EQUATIONS (by groups - without ambiguous acronyms)\n")
 cat("========================================\n")
 
-blocs_etendus <- list(
-  "Groupe 1 - Umbrella/Myopathies" = bloc_nmd_ext_1,
-  "Groupe 2 - Myosites/Inflammatoires" = bloc_nmd_ext_2,
-  "Groupe 3 - Neurone moteur" = bloc_nmd_ext_3,
-  "Groupe 4 - Neuropathies périph." = bloc_nmd_ext_4,
-  "Groupe 5 - Amyloidoses" = bloc_nmd_ext_5,
-  "Groupe 6 - Jonction NM" = bloc_nmd_ext_6,
-  "Groupe 7 - Myotonies/Canalopathies" = bloc_nmd_ext_7,
-  "Groupe 8 - Dystrophies spécifiques" = bloc_nmd_ext_8,
-  "Groupe 9 - Métaboliques" = bloc_nmd_ext_9
+extended_blocks <- list(
+  "Group 1 - Umbrella/Myopathies" = nmd_block_ext_1,
+  "Group 2 - Myositis/Inflammatory" = nmd_block_ext_2,
+  "Group 3 - Motor neuron" = nmd_block_ext_3,
+  "Group 4 - Peripheral neuropathies" = nmd_block_ext_4,
+  "Group 5 - Amyloidosis" = nmd_block_ext_5,
+  "Group 6 - NM junction" = nmd_block_ext_6,
+  "Group 7 - Myotonic/Channelopathies" = nmd_block_ext_7,
+  "Group 8 - Specific dystrophies" = nmd_block_ext_8,
+  "Group 9 - Metabolic" = nmd_block_ext_9
 )
 
-pmids_etendu_all <- c()
+pmids_extended_all <- c()
 
-for (nom in names(blocs_etendus)) {
-  eq <- paste(bloc_sexualite, "AND", blocs_etendus[[nom]], bloc_exclusions, filtre_date)
-  pmids_groupe <- search_pubmed_pmids(eq, nom)
-  pmids_etendu_all <- c(pmids_etendu_all, pmids_groupe)
+for (name in names(extended_blocks)) {
+  eq <- paste(sexuality_block, "AND", extended_blocks[[name]], exclusions_block, date_filter)
+  pmids_group <- search_pubmed_pmids(eq, name)
+  pmids_extended_all <- c(pmids_extended_all, pmids_group)
 }
 
-pmids_etendu <- unique(pmids_etendu_all)
+pmids_extended <- unique(pmids_extended_all)
 
-cat("\n--- Total après dédoublonnage ---\n")
-cat("PMIDs uniques (étendu):", length(pmids_etendu), "\n")
+cat("\n--- Total after deduplication ---\n")
+cat("Unique PMIDs (extended):", length(pmids_extended), "\n")
 
 # ==============================================================================
-# 4. IDENTIFICATION DES NOUVEAUX ARTICLES
+# 4. IDENTIFICATION OF NEW ARTICLES
 # ==============================================================================
 
 cat("\n\n========================================\n")
-cat("ANALYSE COMPARATIVE\n")
+cat("COMPARATIVE ANALYSIS\n")
 cat("========================================\n")
 
 pmids_original <- unique(pmids_original)
-pmids_nouveaux <- setdiff(pmids_etendu, pmids_original)
+pmids_new <- setdiff(pmids_extended, pmids_original)
 
-cat("\nÉquation originale    :", length(pmids_original), "articles uniques\n")
-cat("Équation étendue      :", length(pmids_etendu), "articles uniques\n")
-cat("Articles NOUVEAUX (X) :", length(pmids_nouveaux), "articles\n")
+cat("\nOriginal equation    :", length(pmids_original), "unique articles\n")
+cat("Extended equation    :", length(pmids_extended), "unique articles\n")
+cat("NEW articles (X)     :", length(pmids_new), "articles\n")
 
 # ==============================================================================
-# 5. RÉCUPÉRATION DES DÉTAILS
+# 5. FETCHING DETAILS
 # ==============================================================================
 
 cat("\n\n========================================\n")
-cat("RÉCUPÉRATION DES MÉTADONNÉES\n")
+cat("FETCHING METADATA\n")
 cat("========================================\n")
 
-results_original <- fetch_pubmed_details(pmids_original, "Équation originale")
+results_original <- fetch_pubmed_details(pmids_original, "Original equation")
 
-if (length(pmids_nouveaux) > 0) {
-  results_nouveaux <- fetch_pubmed_details(pmids_nouveaux, "Nouveaux articles")
+if (length(pmids_new) > 0) {
+  results_new <- fetch_pubmed_details(pmids_new, "New articles")
 } else {
-  results_nouveaux <- data.frame()
-  cat("\nAucun nouvel article à récupérer.\n")
+  results_new <- data.frame()
+  cat("\nNo new articles to fetch.\n")
 }
 
 # ==============================================================================
-# 6. STATISTIQUES SUR LES NOUVEAUX ARTICLES
+# 6. STATISTICS ON NEW ARTICLES
 # ==============================================================================
 
-if (nrow(results_nouveaux) > 0) {
+if (nrow(results_new) > 0) {
   cat("\n\n========================================\n")
-  cat("STATISTIQUES - NOUVEAUX ARTICLES\n")
+  cat("STATISTICS - NEW ARTICLES\n")
   cat("========================================\n")
 
-  cat("\n--- Répartition par année ---\n")
-  year_table <- table(results_nouveaux$Year)
+  cat("\n--- Distribution by year ---\n")
+  year_table <- table(results_new$Year)
   print(year_table)
 
-  cat("\n--- Top 15 journaux ---\n")
-  journal_table <- sort(table(results_nouveaux$Journal), decreasing = TRUE)
+  cat("\n--- Top 15 journals ---\n")
+  journal_table <- sort(table(results_new$Journal), decreasing = TRUE)
   print(head(journal_table, 15))
 
-  # Recherche de mots-clés NMD dans les titres (formes longues)
-  cat("\n--- Maladies NMD détectées dans les titres ---\n")
+  # NMD keyword search in titles (full names)
+  cat("\n--- NMD diseases detected in titles ---\n")
   keywords_nmd <- c(
     "duchenne", "becker", "muscular dystrophy", "myotonic dystrophy",
     "amyotrophic lateral sclerosis", "motor neuron disease",
@@ -380,71 +380,67 @@ if (nrow(results_nouveaux) > 0) {
   )
 
   for (kw in keywords_nmd) {
-    n <- sum(grepl(kw, results_nouveaux$Title, ignore.case = TRUE))
+    n <- sum(grepl(kw, results_new$Title, ignore.case = TRUE))
     if (n > 0) cat("  ", kw, ":", n, "\n")
   }
 }
 
 # ==============================================================================
-# 7. EXPORT DES RÉSULTATS
+# 7. EXPORT RESULTS
 # ==============================================================================
 
 output_dir <- "/home/ffer/article_audrey/output_search"
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-write.csv(results_original, file.path(output_dir, "pubmed_equation_originale.csv"),
+write.csv(results_original, file.path(output_dir, "pubmed_original_equation.csv"),
           row.names = FALSE, fileEncoding = "UTF-8")
 
-if (nrow(results_nouveaux) > 0) {
-  write.csv(results_nouveaux, file.path(output_dir, "pubmed_NOUVEAUX_articles.csv"),
+if (nrow(results_new) > 0) {
+  write.csv(results_new, file.path(output_dir, "pubmed_NEW_articles.csv"),
             row.names = FALSE, fileEncoding = "UTF-8")
 }
 
-# Rapport
-rapport <- paste0(
+# Report
+report <- paste0(
   "=================================================================\n",
-  "RAPPORT DE COMPARAISON - STRATÉGIES DE RECHERCHE PUBMED\n",
-  "Version 3 - Sans acronymes ambigus\n",
+  "COMPARISON REPORT - PUBMED SEARCH STRATEGIES\n",
+  "Version 3 - Without ambiguous acronyms\n",
   "=================================================================\n",
   "\n",
-  "Date d'exécution : ", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n",
-  "Période couverte : 1983-2024\n",
+  "Execution date: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n",
+  "Period covered: 1983-2024\n",
   "\n",
-  "ACRONYMES RETIRÉS (ambigus) :\n",
+  "ACRONYMS REMOVED (ambiguous):\n",
   "- SMA (Smooth Muscle Actin vs Spinal Muscular Atrophy)\n",
-  "- ALS (multiples significations)\n",
+  "- ALS (multiple meanings)\n",
   "- BMD (Bone Mineral Density vs Becker Muscular Dystrophy)\n",
   "- MG (Magnesium vs Myasthenia Gravis)\n",
   "- FAP (Familial Adenomatous Polyposis vs Familial Amyloid Polyneuropathy)\n",
-  "- IBM (compagnie vs Inclusion Body Myositis)\n",
+  "- IBM (company vs Inclusion Body Myositis)\n",
   "- DMD, FSHD, LGMD, EDMD, DM1, DM2, LEMS, CMT, CIDP, GBS, HNPP\n",
   "\n",
-  "--- RÉSULTATS ---\n",
-  "Équation originale    : ", length(pmids_original), " articles\n",
-  "Équation étendue      : ", length(pmids_etendu), " articles\n",
-  "Articles NOUVEAUX (X) : ", length(pmids_nouveaux), " articles\n",
+  "--- RESULTS ---\n",
+  "Original equation    : ", length(pmids_original), " articles\n",
+  "Extended equation    : ", length(pmids_extended), " articles\n",
+  "NEW articles (X)     : ", length(pmids_new), " articles\n",
   "\n",
-  "--- FICHIERS GÉNÉRÉS ---\n",
-  "1. pubmed_equation_originale.csv  : ", nrow(results_original), " articles\n",
-  "2. pubmed_NOUVEAUX_articles.csv   : ", nrow(results_nouveaux), " articles\n",
-  "3. rapport_comparaison.txt        : ce fichier\n",
-  "\n",
-  "--- POUR LE REVIEWER ---\n",
-  "X = ", length(pmids_nouveaux), " articles additionnels identifiés\n",
-  "Y = [à compléter après screening manuel]\n",
+  "--- FILES GENERATED ---\n",
+  "1. pubmed_original_equation.csv : ", nrow(results_original), " articles\n",
+  "2. pubmed_NEW_articles.csv      : ", nrow(results_new), " articles\n",
+  "3. comparison_report.txt        : this file\n",
   "\n",
   "=================================================================\n"
 )
 
-writeLines(rapport, file.path(output_dir, "rapport_comparaison.txt"))
+writeLines(report, file.path(output_dir, "comparison_report.txt"))
 
 cat("\n\n")
 cat("################################################################\n")
-cat("# FICHIERS EXPORTÉS                                           #\n")
+cat("# FILES EXPORTED                                               #\n")
 cat("################################################################\n")
-cat("\nDossier:", output_dir, "\n")
-cat("- pubmed_equation_originale.csv\n")
-if (nrow(results_nouveaux) > 0) cat("- pubmed_NOUVEAUX_articles.csv\n")
-cat("- rapport_comparaison.txt\n")
+cat("\nFolder:", output_dir, "\n")
+cat("- pubmed_original_equation.csv\n")
+if (nrow(results_new) > 0) cat("- pubmed_NEW_articles.csv\n")
+cat("- comparison_report.txt\n")
 
-cat("\n>>> SCRIPT TERMINÉ <<<\n")
+cat("\n>>> SCRIPT COMPLETED <<<\n")
