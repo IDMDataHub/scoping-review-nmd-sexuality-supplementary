@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 # ==============================================================================
-# Script R : Extraction finale des articles vraiment nouveaux
-# Filtre les doublons et récupère toutes les métadonnées + liens full text
+# R Script: Final extraction of truly new articles
+# Filters duplicates and retrieves all metadata + full text links
 # ==============================================================================
 
 library(rentrez)
@@ -9,11 +9,11 @@ library(dplyr)
 library(xml2)
 
 # ==============================================================================
-# 1. LISTE DES AUTEURS DES 26 ARTICLES DÉJÀ INCLUS
+# 1. LIST OF AUTHORS FROM THE 26 ALREADY INCLUDED ARTICLES
 # ==============================================================================
 
-# Auteurs principaux extraits des références 14-40 du manuscrit
-auteurs_inclus <- c(
+# Principal authors extracted from references 14-40 of the manuscript
+included_authors <- c(
   # Ref 14 - Anderson & Bardach
   "Anderson F", "Bardach",
   # Ref 15 - Antonini et al (DM1 erectile)
@@ -45,9 +45,9 @@ auteurs_inclus <- c(
   # Ref 28 - Rellini et al
   "Nappi RE", "Vaccaro P", "Meston CM",
   # Ref 29 - Carr et al (ATTR)
-  "Carr AS", "Pelayo-Negro AL", "Evans MR", "Laurà M", "Stancanelli C",
+  "Carr AS", "Pelayo-Negro AL", "Evans MR", "Laura M", "Stancanelli C",
   # Ref 30 - Hita Villaplana et al
-  "Hita Villaplana G", "Hita Rosino E", "López Cubillana P",
+  "Hita Villaplana G", "Hita Rosino E", "Lopez Cubillana P",
   # Ref 31 - Gomes et al (FAP women)
   "Gomes MJ", "Martins da Silva A", "Salinas J",
   # Ref 32 - Oliveira-e-Silva et al
@@ -65,75 +65,74 @@ auteurs_inclus <- c(
   # Ref 38 - Papadopoulos (MG methotrexate)
   "Papadopoulos C", "Papadimas GK",
   # Ref 39 - Souza et al (IIM)
-  "Souza FHC", "Araújo DB", "Abdo CHN", "Bonfá E",
-  # Ref 40 - Heřmánková et al
-
-  "Heřmánková B", "Hermankova B", "Špiritović M", "Spiritovic M", "Oreská S", "Štorkánová H"
+  "Souza FHC", "Araujo DB", "Abdo CHN", "Bonfa E",
+  # Ref 40 - Hermankova et al
+  "Hermankova B", "Spiritovic M", "Oreska S", "Storkanova H"
 )
 
 # ==============================================================================
-# 2. CHARGER LES ARTICLES HAUTE PERTINENCE
+# 2. LOAD HIGH RELEVANCE ARTICLES
 # ==============================================================================
 
 cat("=================================================================\n")
-cat("EXTRACTION FINALE DES ARTICLES VRAIMENT NOUVEAUX\n")
+cat("FINAL EXTRACTION OF TRULY NEW ARTICLES\n")
 cat("=================================================================\n\n")
 
-articles <- read.csv("/home/ffer/article_audrey/output_search/pubmed_NOUVEAUX_HAUTE_PERTINENCE.csv",
+articles <- read.csv("/home/ffer/article_audrey/output_search/pubmed_NEW_HIGH_RELEVANCE.csv",
                      stringsAsFactors = FALSE)
 
-cat("Articles haute pertinence en entrée:", nrow(articles), "\n\n")
+cat("High relevance input articles:", nrow(articles), "\n\n")
 
 # ==============================================================================
-# 3. FILTRER LES DOUBLONS
+# 3. FILTER DUPLICATES
 # ==============================================================================
 
-is_doublon <- function(auteurs_article) {
-  if (is.na(auteurs_article) || auteurs_article == "") return(FALSE)
+is_duplicate <- function(article_authors) {
+  if (is.na(article_authors) || article_authors == "") return(FALSE)
 
-  for (auteur_inclus in auteurs_inclus) {
-    if (grepl(auteur_inclus, auteurs_article, ignore.case = TRUE)) {
+  for (included_author in included_authors) {
+    if (grepl(included_author, article_authors, ignore.case = TRUE)) {
       return(TRUE)
     }
   }
   return(FALSE)
 }
 
-articles$is_doublon <- sapply(articles$Authors, is_doublon)
+articles$is_duplicate <- sapply(articles$Authors, is_duplicate)
 
-doublons <- articles %>% filter(is_doublon == TRUE)
-nouveaux <- articles %>% filter(is_doublon == FALSE)
+duplicates <- articles %>% filter(is_duplicate == TRUE)
+new_articles <- articles %>% filter(is_duplicate == FALSE)
 
-cat("--- RÉSULTAT DU FILTRAGE ---\n")
-cat("Doublons (déjà inclus)     :", nrow(doublons), "\n")
-cat("Articles VRAIMENT nouveaux :", nrow(nouveaux), "\n\n")
+cat("--- FILTERING RESULT ---\n")
+cat("Duplicates (already included) :", nrow(duplicates), "\n")
+cat("TRULY new articles            :", nrow(new_articles), "\n\n")
 
-if (nrow(doublons) > 0) {
-  cat("--- DOUBLONS IDENTIFIÉS ---\n")
-  for (i in 1:nrow(doublons)) {
-    cat("  -", substr(doublons$Title[i], 1, 70), "...\n")
-    cat("    Auteurs:", substr(doublons$Authors[i], 1, 50), "\n")
+if (nrow(duplicates) > 0) {
+  cat("--- IDENTIFIED DUPLICATES ---\n")
+  for (i in 1:nrow(duplicates)) {
+    cat("  -", substr(duplicates$Title[i], 1, 70), "...\n")
+    cat("    Authors:", substr(duplicates$Authors[i], 1, 50), "\n")
   }
   cat("\n")
 }
 
 # ==============================================================================
-# 4. RÉCUPÉRER INFOS COMPLÈTES POUR LES NOUVEAUX ARTICLES
+# 4. RETRIEVE COMPLETE INFO FOR NEW ARTICLES
 # ==============================================================================
 
-if (nrow(nouveaux) > 0) {
-  cat("--- RÉCUPÉRATION DES MÉTADONNÉES COMPLÈTES ---\n\n")
+if (nrow(new_articles) > 0) {
+  cat("--- FETCHING COMPLETE METADATA ---\n\n")
 
-  pmids <- nouveaux$PMID
+  pmids <- new_articles$PMID
 
-  # Récupérer les données complètes via l'API PubMed
+  # Retrieve complete data via PubMed API
   all_records <- list()
 
   for (pmid in pmids) {
-    cat("  Traitement PMID:", pmid, "... ")
+    cat("  Processing PMID:", pmid, "... ")
 
     tryCatch({
-      # Récupérer XML détaillé
+      # Retrieve detailed XML
       fetch_result <- entrez_fetch(db = "pubmed", id = pmid, rettype = "xml", parsed = FALSE)
       xml_doc <- read_xml(fetch_result)
       article <- xml_find_first(xml_doc, "//PubmedArticle")
@@ -141,11 +140,11 @@ if (nrow(nouveaux) > 0) {
       record <- list()
       record$PMID <- pmid
 
-      # Titre
+      # Title
       title_node <- xml_find_first(article, ".//ArticleTitle")
       record$Title <- if (!is.na(title_node)) xml_text(title_node) else NA
 
-      # Auteurs complets
+      # Complete authors
       authors <- xml_find_all(article, ".//Author")
       author_list <- sapply(authors, function(a) {
         lastname <- xml_text(xml_find_first(a, ".//LastName"))
@@ -160,14 +159,14 @@ if (nrow(nouveaux) > 0) {
       affil_nodes <- xml_find_all(article, ".//Affiliation")
       record$Affiliations <- paste(sapply(affil_nodes, xml_text), collapse = " | ")
 
-      # Journal complet
+      # Complete journal
       journal_node <- xml_find_first(article, ".//Journal/Title")
       record$Journal <- if (!is.na(journal_node)) xml_text(journal_node) else NA
 
       journal_abbrev <- xml_find_first(article, ".//Journal/ISOAbbreviation")
       record$Journal_Abbrev <- if (!is.na(journal_abbrev)) xml_text(journal_abbrev) else NA
 
-      # Année, mois
+      # Year, month
       year_node <- xml_find_first(article, ".//PubDate/Year")
       record$Year <- if (!is.na(year_node)) xml_text(year_node) else NA
 
@@ -184,7 +183,7 @@ if (nrow(nouveaux) > 0) {
       pages_node <- xml_find_first(article, ".//Pagination/MedlinePgn")
       record$Pages <- if (!is.na(pages_node)) xml_text(pages_node) else NA
 
-      # Abstract complet
+      # Complete abstract
       abstract_parts <- xml_find_all(article, ".//AbstractText")
       if (length(abstract_parts) > 0) {
         abstract_texts <- sapply(abstract_parts, function(p) {
@@ -201,26 +200,26 @@ if (nrow(nouveaux) > 0) {
       doi_node <- xml_find_first(article, ".//ArticleId[@IdType='doi']")
       record$DOI <- if (!is.na(doi_node)) xml_text(doi_node) else NA
 
-      # PMC ID (pour accès full text)
+      # PMC ID (for full text access)
       pmc_node <- xml_find_first(article, ".//ArticleId[@IdType='pmc']")
       record$PMCID <- if (!is.na(pmc_node)) xml_text(pmc_node) else NA
 
-      # Lien PubMed
+      # PubMed link
       record$PubMed_URL <- paste0("https://pubmed.ncbi.nlm.nih.gov/", pmid, "/")
 
-      # Lien PMC (full text gratuit si disponible)
+      # PMC link (free full text if available)
       if (!is.na(record$PMCID) && record$PMCID != "") {
         record$PMC_URL <- paste0("https://www.ncbi.nlm.nih.gov/pmc/articles/", record$PMCID, "/")
-        record$FullText_Available <- "OUI (PMC)"
+        record$FullText_Available <- "YES (PMC)"
       } else if (!is.na(record$DOI) && record$DOI != "") {
         record$PMC_URL <- NA
         record$FullText_Available <- "Via DOI"
       } else {
         record$PMC_URL <- NA
-        record$FullText_Available <- "NON"
+        record$FullText_Available <- "NO"
       }
 
-      # Lien DOI
+      # DOI link
       if (!is.na(record$DOI) && record$DOI != "") {
         record$DOI_URL <- paste0("https://doi.org/", record$DOI)
       } else {
@@ -235,15 +234,15 @@ if (nrow(nouveaux) > 0) {
       kw_nodes <- xml_find_all(article, ".//Keyword")
       record$Keywords <- paste(sapply(kw_nodes, xml_text), collapse = "; ")
 
-      # Type de publication
+      # Publication type
       pt_nodes <- xml_find_all(article, ".//PublicationType")
       record$Publication_Type <- paste(sapply(pt_nodes, xml_text), collapse = "; ")
 
-      # Langue
+      # Language
       lang_node <- xml_find_first(article, ".//Language")
       record$Language <- if (!is.na(lang_node)) xml_text(lang_node) else NA
 
-      # Pays
+      # Country
       country_node <- xml_find_first(article, ".//MedlineJournalInfo/Country")
       record$Country <- if (!is.na(country_node)) xml_text(country_node) else NA
 
@@ -253,20 +252,20 @@ if (nrow(nouveaux) > 0) {
       Sys.sleep(0.4)
 
     }, error = function(e) {
-      cat("ERREUR:", e$message, "\n")
+      cat("ERROR:", e$message, "\n")
     })
   }
 
-  # Convertir en dataframe
+  # Convert to dataframe
   df_final <- bind_rows(all_records)
 
-  # Ajouter colonnes pour le screening
+  # Add screening columns
   df_final$Screening_Decision <- ""
   df_final$Screening_Reason <- ""
   df_final$Relevance_Score <- ""
   df_final$Notes <- ""
 
-  # Réorganiser les colonnes
+  # Reorder columns
   cols_order <- c(
     "PMID", "Title", "Authors", "Year", "Journal",
     "Abstract", "DOI", "DOI_URL", "PubMed_URL", "PMC_URL", "FullText_Available",
@@ -276,13 +275,13 @@ if (nrow(nouveaux) > 0) {
     "PMCID", "Language", "Country"
   )
 
-  # Garder seulement les colonnes qui existent
+  # Keep only existing columns
   cols_exist <- cols_order[cols_order %in% names(df_final)]
   df_final <- df_final[, cols_exist]
 
 } else {
   df_final <- data.frame()
-  cat("Aucun nouvel article à traiter.\n")
+  cat("No new articles to process.\n")
 }
 
 # ==============================================================================
@@ -291,21 +290,21 @@ if (nrow(nouveaux) > 0) {
 
 output_dir <- "/home/ffer/article_audrey/output_search"
 
-# Export CSV principal (compatible Excel)
-output_file <- file.path(output_dir, "ARTICLES_NOUVEAUX_POUR_SCREENING.csv")
+# Main CSV export (Excel compatible)
+output_file <- file.path(output_dir, "NEW_ARTICLES_FOR_SCREENING.csv")
 write.csv(df_final, output_file, row.names = FALSE, fileEncoding = "UTF-8", na = "")
 
 cat("\n\n=================================================================\n")
-cat("RÉSUMÉ FINAL\n")
+cat("FINAL SUMMARY\n")
 cat("=================================================================\n")
-cat("\nArticles haute pertinence analysés :", nrow(articles), "\n")
-cat("Doublons (déjà dans les 26 inclus) :", nrow(doublons), "\n")
-cat("Articles VRAIMENT nouveaux         :", nrow(nouveaux), "\n")
-cat("\nFichier exporté :", output_file, "\n")
+cat("\nHigh relevance articles analyzed    :", nrow(articles), "\n")
+cat("Duplicates (in the 26 included)     :", nrow(duplicates), "\n")
+cat("TRULY new articles                  :", nrow(new_articles), "\n")
+cat("\nFile exported:", output_file, "\n")
 
-# Afficher les titres des nouveaux articles
+# Display new article titles
 if (nrow(df_final) > 0) {
-  cat("\n--- LISTE DES", nrow(df_final), "ARTICLES À SCREENER ---\n\n")
+  cat("\n--- LIST OF", nrow(df_final), "ARTICLES TO SCREEN ---\n\n")
   for (i in 1:nrow(df_final)) {
     ft <- ifelse(!is.na(df_final$FullText_Available[i]), df_final$FullText_Available[i], "?")
     cat(i, ". [", df_final$Year[i], "] ", substr(df_final$Title[i], 1, 80), "...\n", sep = "")
@@ -313,41 +312,36 @@ if (nrow(df_final) > 0) {
   }
 }
 
-# Créer aussi un rapport texte
-rapport <- paste0(
+# Create text report
+report <- paste0(
   "=================================================================\n",
-  "RAPPORT FINAL - ARTICLES NOUVEAUX POUR SCREENING\n",
+  "FINAL REPORT - NEW ARTICLES FOR SCREENING\n",
   "=================================================================\n",
   "\n",
   "Date: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n",
   "\n",
-  "--- CONTEXTE ---\n",
-  "Équation originale : termes 'neuromuscular' uniquement\n",
-  "Équation étendue   : + catégories (myopathy, dystrophy, etc.)\n",
-  "                     + maladies spécifiques (formes longues)\n",
+  "--- CONTEXT ---\n",
+  "Original equation : 'neuromuscular' terms only\n",
+  "Extended equation : + categories (myopathy, dystrophy, etc.)\n",
+  "                    + specific diseases (full names)\n",
   "\n",
-  "--- RÉSULTATS ---\n",
-  "Articles haute pertinence (terme NMD dans titre) : ", nrow(articles), "\n",
-  "Doublons avec les 26 articles inclus             : ", nrow(doublons), "\n",
-  "Articles VRAIMENT nouveaux à screener            : ", nrow(df_final), "\n",
+  "--- RESULTS ---\n",
+  "High relevance articles (NMD term in title) : ", nrow(articles), "\n",
+  "Duplicates with the 26 included articles    : ", nrow(duplicates), "\n",
+  "TRULY new articles to screen                : ", nrow(df_final), "\n",
   "\n",
-  "--- FICHIER GÉNÉRÉ ---\n",
-  "ARTICLES_NOUVEAUX_POUR_SCREENING.csv\n",
+  "--- FILE GENERATED ---\n",
+  "NEW_ARTICLES_FOR_SCREENING.csv\n",
   "\n",
-  "Colonnes pour le screening :\n",
+  "Screening columns:\n",
   "- Screening_Decision : INCLUDE / EXCLUDE\n",
-  "- Screening_Reason   : raison de l'inclusion/exclusion\n",
-  "- Relevance_Score    : 1-5 (pertinence pour la revue)\n",
-  "- Notes              : commentaires libres\n",
-  "\n",
-  "--- POUR LE REVIEWER ---\n",
-  "La stratégie étendue a identifié ", nrow(df_final), " articles additionnels\n",
-  "potentiellement pertinents, qui n'avaient pas été captés par l'équation\n",
-  "originale utilisant uniquement 'neuromuscular disease/disorder'.\n",
+  "- Screening_Reason   : reason for inclusion/exclusion\n",
+  "- Relevance_Score    : 1-5 (relevance to review)\n",
+  "- Notes              : free comments\n",
   "\n",
   "=================================================================\n"
 )
 
-writeLines(rapport, file.path(output_dir, "rapport_final_screening.txt"))
+writeLines(report, file.path(output_dir, "final_screening_report.txt"))
 
-cat("\n>>> EXTRACTION TERMINÉE <<<\n")
+cat("\n>>> EXTRACTION COMPLETED <<<\n")
