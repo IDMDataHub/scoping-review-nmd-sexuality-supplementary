@@ -29,18 +29,6 @@ This scoping review aimed to map and synthesize evidence on sexual dysfunction i
 
 As PubMed MeSH does not include a single unified heading for all NMDs—distributing them across many disease-level MeSH terms—a sensitivity analysis was conducted to verify the comprehensiveness of the search strategy.
 
-## Original Search Strategy
-
-The original search strategy used umbrella terms:
-
-```
-("sexual behaviour"[MeSH Terms] OR "sexuality"[MeSH Terms] OR ...)
-AND
-("neuromuscular diseases"[MeSH Terms] OR "neuromuscular diseases"[All Fields]
- OR "neuromuscular disorders"[All Fields])
-NOT (exclusions)
-```
-
 ## Objective
 
 To verify the comprehensiveness of the search strategy by:
@@ -50,55 +38,274 @@ To verify the comprehensiveness of the search strategy by:
 3. Identifying any additional relevant articles not captured by umbrella terms
 4. Documenting all screening decisions for transparency
 
-# Methods
+---
 
-## Extended Search Strategy
+# Original Search Strategies
 
-The search strategy was expanded to include:
+## PubMed - Original Search Equation
 
-### Disease Categories (Families)
+The original search strategy used umbrella terms combined with sexual health terms:
 
-- **Myopathies**: myopathy, muscular dystrophy, congenital myopathy, metabolic myopathy, mitochondrial myopathy
-- **Inflammatory myopathies**: myositis, dermatomyositis, polymyositis, inclusion body myositis
-- **Motor neuron diseases**: motor neuron disease, amyotrophic lateral sclerosis, spinal muscular atrophy, Kennedy disease (SBMA)
-- **Peripheral neuropathies**: peripheral neuropathy, polyneuropathy, Charcot-Marie-Tooth disease, Guillain-Barré syndrome, CIDP
-- **Neuromuscular junction disorders**: myasthenia gravis, Lambert-Eaton syndrome, congenital myasthenic syndromes
-- **Channelopathies**: myotonic dystrophy, periodic paralysis, myotonia congenita
-- **Specific dystrophies**: Duchenne, Becker, facioscapulohumeral, limb-girdle, Emery-Dreifuss
-- **Metabolic myopathies**: Pompe disease, McArdle disease
-- **Amyloid neuropathies**: transthyretin amyloidosis, familial amyloid polyneuropathy
+```
+("sexual behaviour"[MeSH Terms] OR ("sexual"[All Fields] AND "behaviour"[All Fields])
+ OR "sexual behaviour"[All Fields] OR "sexual"[All Fields] OR "sexually"[All Fields]
+ OR "sexualities"[All Fields] OR "sexuality"[MeSH Terms] OR "sexuality"[All Fields]
+ OR "sexualization"[All Fields] OR "sexualize"[All Fields] OR "sexualized"[All Fields]
+ OR "sexualizing"[All Fields] OR "sexuals"[All Fields])
 
-### Important Methodological Note
+AND
 
-**Ambiguous acronyms were avoided** to prevent false positives:
+("neuromuscular diseases"[MeSH Terms] OR ("neuromuscular"[All Fields] AND "diseases"[All Fields])
+ OR "neuromuscular diseases"[All Fields] OR ("neuromuscular"[All Fields] AND "disorders"[All Fields])
+ OR "neuromuscular disorders"[All Fields])
+
+NOT (neurofibromatosis[MeSH Terms])
+NOT (diabetes[MeSH Terms])
+NOT (fibromyalgia[MeSH Terms])
+NOT (chronic fatigue syndrome[MeSH Terms])
+NOT (mice OR mouse)
+```
+
+**Period:** 1983-2024
+
+## Google Scholar - Original Search Equation
+
+```
+sexuality neuromuscular disorders sexual OR life
+-dimorphic -"cerebral palsy" -prostatitis -cancer -stroke
+-"chronic respiratory failure" -"multiple sclerosis" -epilepsy
+-abuse -diabetes -cardiac -fibromyalgia -neurofibromatosis
+-"spinal cord injury" -mouse -"cauda equina lesions"
+```
+
+## Cochrane Library - Original Search Equation
+
+```
+("sexual dysfunction" OR "sexual function" OR "sexual health" OR "sexuality"
+ OR "libido" OR "erectile dysfunction" OR "dyspareunia" OR "orgasmic disorder"
+ OR "hypoactive sexual desire disorder" OR "sexual satisfaction")
+
+AND
+
+("neuromuscular disease" OR "neuromuscular disorder")
+
+NOT
+
+("diabetes" OR "fibromyalgia" OR "neurofibromatosis" OR "multiple sclerosis"
+ OR "cancer" OR "stroke" OR "epilepsy" OR "spinal cord injury"
+ OR "mouse" OR "animal model")
+```
+
+---
+
+# Extended Search Strategy
+
+## Rationale
+
+Since PubMed MeSH does not include a single unified heading for all neuromuscular diseases, articles indexed only under disease-specific terms (e.g., "Duchenne muscular dystrophy", "amyotrophic lateral sclerosis") might not be captured by umbrella "neuromuscular" terms.
+
+## Disease-Specific Terms Added
+
+The search strategy was expanded to include specific disease names in 9 groups:
+
+### Group 1: Umbrella + General Myopathies
+```
+"neuromuscular diseases"[MeSH Terms] OR "neuromuscular disease"[Title/Abstract]
+OR "neuromuscular disorder"[Title/Abstract] OR "myopathy"[Title/Abstract]
+OR "myopathies"[Title/Abstract] OR "muscular dystrophy"[Title/Abstract]
+OR "muscular dystrophies"[Title/Abstract] OR "Muscular Dystrophies"[MeSH Terms]
+OR "congenital myopathy"[Title/Abstract] OR "congenital myopathies"[Title/Abstract]
+OR "metabolic myopathy"[Title/Abstract] OR "mitochondrial myopathy"[Title/Abstract]
+OR "Mitochondrial Myopathies"[MeSH Terms]
+```
+
+### Group 2: Inflammatory Myopathies
+```
+"myositis"[MeSH Terms] OR "inflammatory myopathy"[Title/Abstract]
+OR "inflammatory myopathies"[Title/Abstract] OR "dermatomyositis"[Title/Abstract]
+OR "Dermatomyositis"[MeSH Terms] OR "polymyositis"[Title/Abstract]
+OR "Polymyositis"[MeSH Terms] OR "inclusion body myositis"[Title/Abstract]
+OR "Myositis, Inclusion Body"[MeSH Terms] OR "necrotizing myopathy"[Title/Abstract]
+OR "immune-mediated necrotizing myopathy"[Title/Abstract]
+OR "antisynthetase syndrome"[Title/Abstract]
+```
+
+### Group 3: Motor Neuron Diseases
+```
+"motor neuron disease"[Title/Abstract] OR "motor neurone disease"[Title/Abstract]
+OR "Motor Neuron Disease"[MeSH Terms] OR "amyotrophic lateral sclerosis"[Title/Abstract]
+OR "Amyotrophic Lateral Sclerosis"[MeSH Terms] OR "spinal muscular atrophy"[Title/Abstract]
+OR "Muscular Atrophy, Spinal"[MeSH Terms] OR "spinal and bulbar muscular atrophy"[Title/Abstract]
+OR "Bulbo-Spinal Atrophy, X-Linked"[MeSH Terms] OR "Kennedy disease"[Title/Abstract]
+OR "primary lateral sclerosis"[Title/Abstract]
+```
+
+### Group 4: Peripheral Neuropathies
+```
+"peripheral neuropathy"[Title/Abstract] OR "peripheral neuropathies"[Title/Abstract]
+OR "polyneuropathy"[Title/Abstract] OR "polyneuropathies"[Title/Abstract]
+OR "Polyneuropathies"[MeSH Terms] OR "hereditary motor and sensory neuropathy"[Title/Abstract]
+OR "Charcot-Marie-Tooth disease"[Title/Abstract] OR "Charcot-Marie-Tooth Disease"[MeSH Terms]
+OR "hereditary neuropathy with liability to pressure palsies"[Title/Abstract]
+OR "chronic inflammatory demyelinating polyneuropathy"[Title/Abstract]
+OR "chronic inflammatory demyelinating polyradiculoneuropathy"[Title/Abstract]
+OR "Polyradiculoneuropathy, Chronic Inflammatory Demyelinating"[MeSH Terms]
+OR "Guillain-Barre syndrome"[Title/Abstract] OR "Guillain-Barre Syndrome"[MeSH Terms]
+OR "multifocal motor neuropathy"[Title/Abstract]
+```
+
+### Group 5: Amyloid Neuropathies
+```
+"transthyretin amyloidosis"[Title/Abstract] OR "ATTR amyloidosis"[Title/Abstract]
+OR "hereditary transthyretin amyloidosis"[Title/Abstract]
+OR "Amyloid Neuropathies, Familial"[MeSH Terms]
+OR "familial amyloid polyneuropathy"[Title/Abstract]
+OR "amyloid neuropathy"[Title/Abstract]
+```
+
+### Group 6: Neuromuscular Junction Disorders
+```
+"neuromuscular junction disease"[Title/Abstract]
+OR "Neuromuscular Junction Diseases"[MeSH Terms]
+OR "myasthenia gravis"[Title/Abstract] OR "Myasthenia Gravis"[MeSH Terms]
+OR "Lambert-Eaton myasthenic syndrome"[Title/Abstract]
+OR "Lambert-Eaton Myasthenic Syndrome"[MeSH Terms]
+OR "congenital myasthenic syndrome"[Title/Abstract]
+OR "congenital myasthenic syndromes"[Title/Abstract]
+OR "Myasthenic Syndromes, Congenital"[MeSH Terms]
+```
+
+### Group 7: Myotonic Dystrophy and Channelopathies
+```
+"myotonic dystrophy"[Title/Abstract] OR "Myotonic Dystrophy"[MeSH Terms]
+OR "Steinert disease"[Title/Abstract] OR "myotonia congenita"[Title/Abstract]
+OR "Myotonia Congenita"[MeSH Terms] OR "paramyotonia congenita"[Title/Abstract]
+OR "periodic paralysis"[Title/Abstract] OR "hyperkalemic periodic paralysis"[Title/Abstract]
+OR "hypokalemic periodic paralysis"[Title/Abstract]
+OR "muscle channelopathy"[Title/Abstract] OR "muscular channelopathy"[Title/Abstract]
+```
+
+### Group 8: Specific Muscular Dystrophies
+```
+"Duchenne muscular dystrophy"[Title/Abstract] OR "Muscular Dystrophy, Duchenne"[MeSH Terms]
+OR "Becker muscular dystrophy"[Title/Abstract]
+OR "facioscapulohumeral muscular dystrophy"[Title/Abstract]
+OR "Muscular Dystrophy, Facioscapulohumeral"[MeSH Terms]
+OR "limb-girdle muscular dystrophy"[Title/Abstract]
+OR "limb girdle muscular dystrophy"[Title/Abstract]
+OR "Muscular Dystrophies, Limb-Girdle"[MeSH Terms]
+OR "Emery-Dreifuss muscular dystrophy"[Title/Abstract]
+OR "Muscular Dystrophy, Emery-Dreifuss"[MeSH Terms]
+OR "oculopharyngeal muscular dystrophy"[Title/Abstract]
+OR "distal muscular dystrophy"[Title/Abstract] OR "distal myopathy"[Title/Abstract]
+OR "congenital muscular dystrophy"[Title/Abstract]
+```
+
+### Group 9: Metabolic Myopathies
+```
+"Pompe disease"[Title/Abstract] OR "Glycogen Storage Disease Type II"[MeSH Terms]
+OR "acid maltase deficiency"[Title/Abstract] OR "McArdle disease"[Title/Abstract]
+OR "Glycogen Storage Disease Type V"[MeSH Terms]
+OR "glycogen storage disease myopathy"[Title/Abstract]
+```
+
+## Important Methodological Note: Ambiguous Acronyms
+
+**Ambiguous acronyms were deliberately avoided** to prevent false positives:
 
 | Acronym | Intended meaning | Common false positive |
 |---------|-----------------|----------------------|
-| SMA | Spinal Muscular Atrophy | Smooth Muscle Actin |
-| ALS | Amyotrophic Lateral Sclerosis | Various |
+| SMA | Spinal Muscular Atrophy | Smooth Muscle Actin (histology) |
+| ALS | Amyotrophic Lateral Sclerosis | Acid-labile subunit, Advanced life support |
 | BMD | Becker Muscular Dystrophy | Bone Mineral Density |
 | MG | Myasthenia Gravis | Magnesium |
 | FAP | Familial Amyloid Polyneuropathy | Familial Adenomatous Polyposis |
 | IBM | Inclusion Body Myositis | Company name |
+| DMD | Duchenne Muscular Dystrophy | Various |
+| FSHD | Facioscapulohumeral Dystrophy | Not widely used |
+| LGMD | Limb-Girdle Muscular Dystrophy | Not widely used |
 
-Only **full disease names** were used in the extended search.
+**Only full disease names were used** in the extended search to ensure specificity.
 
-## Search Execution
+---
 
-- **Database**: PubMed (via NCBI Entrez API)
-- **Period**: 1983-2024 (matching the original review period)
-- **Execution date**: `r format(Sys.time(), '%Y-%m-%d')`
-- **Tool**: R scripts using the `rentrez` package
+# Extended Search - Cochrane Library
+
+## Search Equation
+
+**Database:** Cochrane Library (CENTRAL)
+**Search date:** February 2026
+**Publication date limit:** 1983-2024
+
+```
+#1 Sexual health terms (Title, Abstract, Keywords):
+("sexual dysfunction" OR "sexual function" OR "sexual health" OR "sexuality"
+ OR "erectile dysfunction" OR "libido" OR "dyspareunia" OR "orgasmic disorder"
+ OR "hypoactive sexual desire" OR "sexual satisfaction" OR "impotence"):ti,ab,kw
+
+#2 Neuromuscular disease terms (Title, Abstract, Keywords):
+("neuromuscular disease" OR "neuromuscular disorder" OR "muscular dystrophy"
+ OR "myotonic dystrophy" OR "Steinert disease" OR "amyotrophic lateral sclerosis"
+ OR "motor neuron disease" OR "motor neurone disease"
+ OR "spinal muscular atrophy" OR "Kennedy disease" OR "spinal and bulbar muscular atrophy"
+ OR "myasthenia gravis" OR "Lambert-Eaton"
+ OR "Charcot-Marie-Tooth" OR "hereditary motor sensory neuropathy"
+ OR "dermatomyositis" OR "polymyositis" OR "inclusion body myositis"
+ OR "inflammatory myopathy"
+ OR "myopathy" OR "polyneuropathy" OR "peripheral neuropathy"
+ OR "Guillain-Barre" OR "Guillain-Barré" OR "chronic inflammatory demyelinating"
+ OR "transthyretin amyloidosis" OR "familial amyloid polyneuropathy" OR "ATTR amyloidosis"
+ OR "Duchenne" OR "Becker muscular dystrophy"
+ OR "facioscapulohumeral" OR "limb-girdle" OR "Emery-Dreifuss"
+ OR "Pompe disease" OR "McArdle disease"
+ OR "periodic paralysis" OR "myotonia congenita"):ti,ab,kw
+
+#3 Exclusions:
+NOT ("diabetes" OR "diabetic neuropathy" OR "fibromyalgia" OR "neurofibromatosis"
+ OR "multiple sclerosis" OR "cancer" OR "stroke" OR "epilepsy"
+ OR "spinal cord injury" OR "animal model" OR "mice" OR "mouse" OR "rat"):ti,ab,kw
+
+#4 Final search: #1 AND #2 AND #3
+```
+
+**Result:** No additional relevant articles identified beyond PubMed search and citation tracking.
+
+---
+
+# Extended Search - Google Scholar
+
+## Search Strategy
+
+Due to Google Scholar's limitations (maximum query length ~256 characters, no MeSH support, no structured Boolean), the search was conducted using **10 targeted queries**, each combining a sexual health term with a specific NMD:
+
+| # | Search Query | Results Screened |
+|---|-------------|------------------|
+| 1 | `"sexual dysfunction" OR "sexuality" "spinal muscular atrophy"` | First 100 results |
+| 2 | `"sexual dysfunction" OR "sexuality" "myotonic dystrophy" OR "Steinert disease"` | First 100 results |
+| 3 | `"sexual function" OR "sexuality" "Duchenne muscular dystrophy"` | First 100 results |
+| 4 | `"sexuality" OR "sexual health" "amyotrophic lateral sclerosis"` | First 100 results |
+| 5 | `"sexual dysfunction" OR "erectile dysfunction" "myasthenia gravis"` | First 100 results |
+| 6 | `"sexuality" OR "sexual function" "Charcot-Marie-Tooth"` | First 100 results |
+| 7 | `"sexual function" OR "sexuality" "dermatomyositis" OR "polymyositis"` | First 100 results |
+| 8 | `"erectile dysfunction" "transthyretin amyloidosis" OR "familial amyloid polyneuropathy"` | First 100 results |
+| 9 | `"sexual dysfunction" "Kennedy disease" OR "spinal and bulbar muscular atrophy"` | First 100 results |
+| 10 | `"sexuality" OR "sexual function" "facioscapulohumeral muscular dystrophy"` | First 100 results |
+
+**Exclusion filters applied manually:** Articles on diabetes, multiple sclerosis, spinal cord injury, animal studies, and pediatric populations were excluded during screening.
+
+**Result:** No additional relevant articles identified beyond PubMed search and citation tracking.
+
+---
 
 # Results
 
-## Search Comparison
+## Search Comparison Summary
 
 ```{r load-data}
 # Load results
-original <- read.csv("results/pubmed_equation_originale.csv", stringsAsFactors = FALSE)
-nouveaux_bruts <- read.csv("results/pubmed_NOUVEAUX_articles.csv", stringsAsFactors = FALSE)
-haute_pertinence <- read.csv("results/pubmed_NOUVEAUX_HAUTE_PERTINENCE.csv", stringsAsFactors = FALSE)
+original <- read.csv("results/pubmed_original_search.csv", stringsAsFactors = FALSE)
+new_raw <- read.csv("results/pubmed_new_articles_raw.csv", stringsAsFactors = FALSE)
+high_relevance <- read.csv("results/pubmed_new_high_relevance.csv", stringsAsFactors = FALSE)
 final_table <- read.csv("results/FINAL_EXCLUSION_TABLE_EN.csv", stringsAsFactors = FALSE)
 ```
 
@@ -107,170 +314,192 @@ summary_df <- data.frame(
   Step = c(
     "Original search (umbrella terms only)",
     "Extended search (disease-specific terms)",
-    "New records (after deduplication)",
+    "New records identified",
     "High relevance (NMD term in title)",
-    "After removing duplicates with included studies",
-    "Final: Articles meeting inclusion criteria"
+    "After duplicate removal with included studies",
+    "Meeting inclusion criteria"
   ),
   N = c(
     nrow(original),
-    nrow(original) + nrow(nouveaux_bruts),
-    nrow(nouveaux_bruts),
-    nrow(haute_pertinence),
+    nrow(original) + nrow(new_raw),
+    nrow(new_raw),
+    nrow(high_relevance),
     nrow(final_table),
     sum(final_table$Decision == "INCLUDE")
   )
 )
 
-kable(summary_df, col.names = c("Step", "N articles"), align = c("l", "r")) %>%
+kable(summary_df, col.names = c("Screening Step", "N"), align = c("l", "r")) %>%
   kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) %>%
   row_spec(6, bold = TRUE, background = "#d4edda")
 ```
 
-## Screening Results
+---
 
-### Article Included
+## Complete Screening Table: 16 Additional Articles
 
-```{r included-article}
+The following table presents **all 16 articles** identified through the extended search strategy that were not captured by the original umbrella terms.
+
+Each article was screened at full-text level. Decisions and detailed justifications are provided.
+
+```{r complete-screening-table}
+# Create table with PubMed links
+screening_table <- final_table %>%
+  mutate(
+    PMID_Link = paste0('<a href="https://pubmed.ncbi.nlm.nih.gov/', PMID, '/" target="_blank">', PMID, '</a>'),
+    Short_Title = ifelse(nchar(Title) > 80, paste0(substr(Title, 1, 77), "..."), Title)
+  ) %>%
+  select(PMID_Link, Year, Short_Title, Decision, Justification)
+
+kable(screening_table,
+      col.names = c("PMID", "Year", "Title", "Decision", "Justification"),
+      escape = FALSE,
+      align = c("c", "c", "l", "c", "l")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                full_width = TRUE,
+                font_size = 11) %>%
+  column_spec(1, width = "7%") %>%
+  column_spec(2, width = "5%") %>%
+  column_spec(3, width = "25%") %>%
+  column_spec(4, width = "8%", bold = TRUE) %>%
+  column_spec(5, width = "55%") %>%
+  row_spec(which(final_table$Decision == "INCLUDE"), bold = TRUE, background = "#d4edda") %>%
+  row_spec(which(final_table$Decision == "EXCLUDE"), background = "#f8f9fa")
+```
+
+---
+
+## Article Included in Review
+
+```{r included-article, results='asis'}
 included <- final_table %>% filter(Decision == "INCLUDE")
 
 if (nrow(included) > 0) {
-  cat("**PMID:**", included$PMID[1], "\n\n")
-  cat("**Year:**", included$Year[1], "\n\n")
-  cat("**Title:**", included$Title[1], "\n\n")
-  cat("**Content summary:**\n\n")
-  cat(included$Justification[1])
+  cat("### ", included$Title[1], "\n\n")
+  cat("- **PMID:** [", included$PMID[1], "](https://pubmed.ncbi.nlm.nih.gov/", included$PMID[1], "/)\n", sep = "")
+  cat("- **Year:** ", included$Year[1], "\n")
+  cat("- **Decision:** INCLUDED\n\n")
+  cat("**Justification:**\n\n")
+  cat(included$Justification[1], "\n")
 }
 ```
 
-### Articles Excluded (n = `r sum(final_table$Decision == "EXCLUDE")`)
+---
 
-```{r excluded-articles}
-excluded <- final_table %>%
-  filter(Decision == "EXCLUDE") %>%
-  select(PMID, Year, Title, Justification)
+## Articles Excluded from Review (n = `r sum(final_table$Decision == "EXCLUDE")`)
 
-kable(excluded, col.names = c("PMID", "Year", "Title", "Reason for exclusion")) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"), full_width = TRUE) %>%
-  column_spec(3, width = "30%") %>%
-  column_spec(4, width = "40%")
+### Summary of Exclusion Reasons
+
+```{r exclusion-summary}
+excluded <- final_table %>% filter(Decision == "EXCLUDE")
+
+# Categorize exclusion reasons
+exclusion_categories <- data.frame(
+  Reason = c(
+    "Population not meeting criteria (caregivers, not patients)",
+    "Congenital/developmental abnormalities, not sexual dysfunction",
+    "No specific data on sexual dysfunction reported",
+    "Language not meeting criteria (Russian)",
+    "Not a primary neuromuscular disease",
+    "Focus on other outcomes (treatment, survival, infection)"
+  ),
+  N = c(1, 2, 7, 1, 1, 3)
+)
+
+kable(exclusion_categories, col.names = c("Exclusion Reason", "N"), align = c("l", "r")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
 ```
 
-## Complete Screening Table (n = 16)
+### Detailed Exclusion Table
 
-The following table presents all 16 articles identified through the extended search strategy, with screening decisions and detailed justifications.
+```{r excluded-details}
+excluded_table <- excluded %>%
+  mutate(
+    PMID_Link = paste0('<a href="https://pubmed.ncbi.nlm.nih.gov/', PMID, '/" target="_blank">', PMID, '</a>')
+  ) %>%
+  select(PMID_Link, Year, Title, Justification)
 
-```{r complete-table}
-complete_table <- final_table %>%
-  select(PMID, Year, Title, Decision, Justification)
-
-kable(complete_table, col.names = c("PMID", "Year", "Title", "Decision", "Justification")) %>%
+kable(excluded_table,
+      col.names = c("PMID", "Year", "Title", "Reason for Exclusion"),
+      escape = FALSE,
+      align = c("c", "c", "l", "l")) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
-                full_width = TRUE, font_size = 12) %>%
+                full_width = TRUE,
+                font_size = 11) %>%
   column_spec(1, width = "8%") %>%
   column_spec(2, width = "5%") %>%
-  column_spec(3, width = "25%") %>%
-  column_spec(4, width = "8%") %>%
-  column_spec(5, width = "54%") %>%
-  row_spec(which(complete_table$Decision == "INCLUDE"), bold = TRUE, background = "#d4edda")
+  column_spec(3, width = "30%") %>%
+  column_spec(4, width = "57%")
 ```
 
-# Cochrane Library and Google Scholar
-
-## Cochrane Library (CENTRAL)
-
-The extended search strategy was also tested on Cochrane Library using the following search equation:
-
-**Search conducted on:** `r format(Sys.time(), '%Y-%m-%d')`
-
-**Search equation:**
-
-```
-#1 ("sexual dysfunction" OR "sexual function" OR "sexual health" OR "sexuality"
-    OR "erectile dysfunction" OR "libido" OR "dyspareunia"):ti,ab,kw
-
-#2 ("neuromuscular disease" OR "neuromuscular disorder" OR "muscular dystrophy"
-    OR "myotonic dystrophy" OR "Steinert" OR "amyotrophic lateral sclerosis"
-    OR "motor neuron disease" OR "spinal muscular atrophy" OR "Kennedy disease"
-    OR "myasthenia gravis" OR "Lambert-Eaton" OR "Charcot-Marie-Tooth"
-    OR "dermatomyositis" OR "polymyositis" OR "inclusion body myositis"
-    OR "myopathy" OR "polyneuropathy" OR "Guillain-Barre" OR "Guillain-Barré"
-    OR "transthyretin amyloidosis" OR "familial amyloid polyneuropathy"
-    OR "Duchenne" OR "Becker muscular dystrophy" OR "facioscapulohumeral"
-    OR "limb-girdle" OR "Emery-Dreifuss" OR "Pompe disease"
-    OR "periodic paralysis"):ti,ab,kw
-
-#3 NOT ("diabetes" OR "diabetic" OR "fibromyalgia" OR "neurofibromatosis"
-    OR "multiple sclerosis" OR "cancer" OR "stroke" OR "epilepsy"
-    OR "spinal cord injury" OR "animal model" OR "mice" OR "mouse"):ti,ab,kw
-
-#4 #1 AND #2 AND #3
-```
-
-**Publication date limit:** 1983-2024
-
-**Result:** No additional relevant articles were identified beyond those already captured by PubMed search and citation tracking.
-
-## Google Scholar
-
-Due to Google Scholar's limitations with complex Boolean queries (maximum query length, no MeSH support), the search was conducted using multiple shorter targeted queries:
-
-**Search queries executed:**
-
-| Query | Search string | Results reviewed |
-|-------|--------------|------------------|
-| 1 | `"sexual dysfunction" OR "sexuality" "spinal muscular atrophy"` | First 100 |
-| 2 | `"sexual dysfunction" OR "sexuality" "myotonic dystrophy" OR "Steinert disease"` | First 100 |
-| 3 | `"sexual function" "Duchenne muscular dystrophy"` | First 100 |
-| 4 | `"sexuality" OR "sexual health" "amyotrophic lateral sclerosis"` | First 100 |
-| 5 | `"sexual dysfunction" "myasthenia gravis"` | First 100 |
-| 6 | `"sexuality" "Charcot-Marie-Tooth"` | First 100 |
-| 7 | `"sexual function" "dermatomyositis" OR "polymyositis"` | First 100 |
-| 8 | `"erectile dysfunction" "transthyretin amyloidosis" OR "familial amyloid polyneuropathy"` | First 100 |
-| 9 | `"sexual dysfunction" "Kennedy disease" OR "spinal and bulbar muscular atrophy"` | First 100 |
-| 10 | `"sexuality" "facioscapulohumeral muscular dystrophy"` | First 100 |
-
-**Exclusion filters applied:** Results were filtered to exclude articles on diabetes, multiple sclerosis, spinal cord injury, animal studies, and pediatric populations.
-
-**Result:** No additional relevant articles were identified beyond those already captured by PubMed search and citation tracking. All relevant articles found in Google Scholar were already included in the PubMed search results or had been identified through citation tracking.
+---
 
 # Conclusion
 
-## Summary
+## Summary of Findings
 
-The extended search strategy using disease-specific terms identified **16 additional records** not captured by the original "neuromuscular disease/disorder" umbrella terms.
+The extended search strategy using disease-specific terms identified **`r nrow(new_raw)` additional records** not captured by the original "neuromuscular disease/disorder" umbrella terms.
 
-After title/abstract and full-text screening:
+After filtering for high relevance (NMD term in title) and removing duplicates with already-included studies, **16 articles** underwent full-text screening.
 
-- **1 article met inclusion criteria** and was added to the review:
-  - Hausmanowa-Petrusewicz I et al. (1983). *X-linked adult form of spinal muscular atrophy.* Journal of Neurology.
-  - This article reports original data on sexual dysfunction (erectile dysfunction, reduced libido) and reproductive abnormalities (reduced fertility, testicular atrophy) in Kennedy disease (SBMA).
+**Final result:**
 
-- **15 articles were excluded** for the following reasons:
-  - Population not meeting inclusion criteria (caregivers, not patients): 1
-  - Congenital/developmental abnormalities, not sexual dysfunction: 2
-  - No specific data on sexual dysfunction reported: 7
-  - Language not meeting criteria (Russian): 1
-  - Not a primary neuromuscular disease: 1
-  - Focus on other outcomes (treatment, survival, infection): 3
+- **1 article met inclusion criteria** and was added to the review
+- **15 articles were excluded** for various reasons (see table above)
+
+## Article Added to Review
+
+**Hausmanowa-Petrusewicz I, Borkowska J, Janczewski Z. (1983)**
+*X-linked adult form of spinal muscular atrophy.*
+Journal of Neurology. [PMID: 6191009](https://pubmed.ncbi.nlm.nih.gov/6191009/)
+
+This article reports original data on **Kennedy disease (SBMA)**, including:
+
+- Sexual dysfunction: erectile dysfunction, reduced libido
+- Reproductive abnormalities: reduced fertility, testicular atrophy, impaired spermatogenesis
 
 ## Impact on Review
 
-The sensitivity analysis resulted in:
-
-- **Total included studies: 27** (26 original + 1 additional)
-- The additional study provides data on **Kennedy disease (SBMA)**, a condition not previously covered in the review
+- **Total included studies:** 27 (26 original + 1 additional)
+- The additional study provides data on **Kennedy disease (SBMA)**, a condition not previously covered in the original review
 - This confirms the comprehensiveness of the original search strategy combined with citation tracking
 
+## Verification of Search Strategy Comprehensiveness
+
+The sensitivity analysis demonstrates that:
+
+1. The original umbrella terms ("neuromuscular disease/disorder") captured the vast majority of relevant literature
+2. Disease-specific terms identified only **1 additional relevant article** out of 301 new records
+3. Extended searches in **Cochrane Library** and **Google Scholar** yielded no additional relevant articles
+4. The search strategy, combined with citation tracking, is comprehensive
+
+---
+
 # Reproducibility
+
+## Data and Code Availability
 
 All analyses were conducted using R version `r R.version.string`.
 
 The complete code and data are available in this repository:
 
-- `scripts/`: R scripts for PubMed search and analysis
-- `results/`: Output CSV files with all screened articles
-- `data/`: Original search equations
+| Folder | Contents |
+|--------|----------|
+| `scripts/` | R scripts for PubMed search and analysis |
+| `results/` | Output CSV files with all screened articles |
+| `data/` | Original search equations |
+
+## Key Files
+
+| File | Description |
+|------|-------------|
+| `scripts/search_comparison_pubmed.R` | Main PubMed search comparison script |
+| `scripts/filter_relevant_nmd.R` | Relevance filtering script |
+| `scripts/extract_new_articles_final.R` | Metadata extraction script |
+| `scripts/create_exclusion_table.R` | Final exclusion table generation |
+| `results/FINAL_EXCLUSION_TABLE_EN.csv` | Complete screening results |
+| `results/pubmed_original_search.csv` | Original search results |
+| `results/pubmed_new_articles_raw.csv` | New articles from extended search |
 
 ## Session Info
 
@@ -280,4 +509,4 @@ sessionInfo()
 
 ---
 
-*This sensitivity analysis is provided as supplementary material for transparency and reproducibility.*
+*This sensitivity analysis was conducted in February 2026 and is provided as supplementary material for transparency and reproducibility.*
