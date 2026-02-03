@@ -1,0 +1,24 @@
+Appendix 1: Detailed search strategies for Google Scholar, PubMed and Cochrane1
+Library2
+Database Search equation
+Google
+Scholar
+sexuality neuromuscular disorders sexual OR life -dimorphic -"cerebral palsy" -prostatitis -cancer -stroke -
+"chronic respiratory failure" -"multiple sclerosis" -epilepsy -abuse -diabetes -cardiac -fibromyalgia -
+neurofibromatosis -"spinal cord injury" -mouse -"cauda equina lesions"
+PubMed ("sexual behaviour"[MeSH Terms] OR ("sexual"[All Fields] AND "behaviour"[All Fields]) OR "sexual
+behaviour"[All Fields] OR "sexual"[All Fields] OR "sexually"[All Fields] OR "sexualities"[All Fields] OR
+"sexuality"[MeSH Terms] OR "sexuality"[All Fields] OR "sexualization"[All Fields] OR "sexualize"[All
+Fields] OR "sexualized"[All Fields] OR "sexualizing"[All Fields] OR "sexuals"[All Fields]) AND
+("neuromuscular diseases"[MeSH Terms] OR ("neuromuscular"[All Fields] AND "diseases"[All Fields])
+OR "neuromuscular diseases"[All Fields] OR ("neuromuscular"[All Fields] AND "disorders"[All Fields])
+OR "neuromuscular disorders"[All Fields]) NOT (neurofibromatosis[MeSH Terms]) NOT (diabetes[MeSH
+Terms]) NOT (fibromyalgia[MeSH Terms]) NOT (chronic fatigue syndrome[MeSH Terms]) NOT (mice
+OR mouse)
+Cochrane ("sexual dysfunction" OR "sexual function" OR "sexual health" OR "sexuality" OR "libido" OR "erectile
+dysfunction" OR "dyspareunia" OR "orgasmic disorder" OR "hypoactive sexual desire disorder" OR
+"sexual satisfaction") AND ("neuromuscular disease" OR "neuromuscular disorder") NOT ("diabetes"
+OR "fibromyalgia" OR "neurofibromatosis" OR "multiple sclerosis" OR "cancer" OR "stroke" OR
+"epilepsy" OR "spinal cord injury" OR "mouse" OR "animal model")
+3
+4

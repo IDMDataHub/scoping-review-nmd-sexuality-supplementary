@@ -1,0 +1,248 @@
+---
+title: "Search Strategy Sensitivity Analysis"
+subtitle: "Sexual Health in Neuromuscular Diseases - Scoping Review"
+author: "Audrey Evin"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    theme: flatly
+    highlight: tango
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+```
+
+# Context
+
+## Reviewer Comment
+
+During the peer review process, the following major comment was raised:
+
+> *"Major comment: The search strategy does not encompass specific diseases, only variations of 'neuromuscular'. This search string may therefore miss disease-specific articles (since many NMD-related studies never index themselves under 'neuromuscular disease' or 'neuromuscular disorder'; additionally, PubMed MeSH does not include a single unified heading for all NMDs – it distributes them across many different independent disease-level MeSH terms). As this is a scoping review, to be considered for publication, a revised search string would therefore need to be employed (to ensure no additional studies are captured using disease-specific strings)."*
+
+## Original Search Strategy
+
+The original search strategy used umbrella terms only:
+
+```
+("sexual behaviour"[MeSH Terms] OR "sexuality"[MeSH Terms] OR ...)
+AND
+("neuromuscular diseases"[MeSH Terms] OR "neuromuscular diseases"[All Fields]
+ OR "neuromuscular disorders"[All Fields])
+NOT (exclusions)
+```
+
+**Limitation identified**: This approach may miss articles indexed only under disease-specific terms (e.g., "Duchenne muscular dystrophy", "myotonic dystrophy", "amyotrophic lateral sclerosis") without the umbrella term "neuromuscular".
+
+## Objective
+
+To conduct a **sensitivity analysis** by:
+
+1. Expanding the search strategy with disease-specific and category terms
+2. Comparing results with the original search
+3. Identifying any additional relevant articles
+4. Documenting all decisions for transparency
+
+# Methods
+
+## Extended Search Strategy
+
+The search strategy was expanded to include:
+
+### Disease Categories (Families)
+
+- **Myopathies**: myopathy, muscular dystrophy, congenital myopathy, metabolic myopathy, mitochondrial myopathy
+- **Inflammatory myopathies**: myositis, dermatomyositis, polymyositis, inclusion body myositis
+- **Motor neuron diseases**: motor neuron disease, amyotrophic lateral sclerosis, spinal muscular atrophy, Kennedy disease (SBMA)
+- **Peripheral neuropathies**: peripheral neuropathy, polyneuropathy, Charcot-Marie-Tooth disease, Guillain-Barré syndrome, CIDP
+- **Neuromuscular junction disorders**: myasthenia gravis, Lambert-Eaton syndrome, congenital myasthenic syndromes
+- **Channelopathies**: myotonic dystrophy, periodic paralysis, myotonia congenita
+- **Specific dystrophies**: Duchenne, Becker, facioscapulohumeral, limb-girdle, Emery-Dreifuss
+- **Metabolic myopathies**: Pompe disease, McArdle disease
+- **Amyloid neuropathies**: transthyretin amyloidosis, familial amyloid polyneuropathy
+
+### Important Methodological Note
+
+**Ambiguous acronyms were avoided** to prevent false positives:
+
+| Acronym | Intended meaning | Common false positive |
+|---------|-----------------|----------------------|
+| SMA | Spinal Muscular Atrophy | Smooth Muscle Actin |
+| ALS | Amyotrophic Lateral Sclerosis | Various |
+| BMD | Becker Muscular Dystrophy | Bone Mineral Density |
+| MG | Myasthenia Gravis | Magnesium |
+| FAP | Familial Amyloid Polyneuropathy | Familial Adenomatous Polyposis |
+| IBM | Inclusion Body Myositis | Company name |
+
+Only **full disease names** were used in the extended search.
+
+## Search Execution
+
+- **Database**: PubMed (via NCBI Entrez API)
+- **Period**: 1983-2024 (matching the original review period)
+- **Execution date**: `r format(Sys.time(), '%Y-%m-%d')`
+- **Tool**: R scripts using the `rentrez` package
+
+# Results
+
+## Search Comparison
+
+```{r load-data}
+# Load results
+original <- read.csv("results/pubmed_equation_originale.csv", stringsAsFactors = FALSE)
+nouveaux_bruts <- read.csv("results/pubmed_NOUVEAUX_articles.csv", stringsAsFactors = FALSE)
+haute_pertinence <- read.csv("results/pubmed_NOUVEAUX_HAUTE_PERTINENCE.csv", stringsAsFactors = FALSE)
+final_table <- read.csv("results/FINAL_EXCLUSION_TABLE_EN.csv", stringsAsFactors = FALSE)
+```
+
+```{r summary-table}
+summary_df <- data.frame(
+  Step = c(
+    "Original search (umbrella terms only)",
+    "Extended search (disease-specific terms)",
+    "New records (after deduplication)",
+    "High relevance (NMD term in title)",
+    "After removing duplicates with included studies",
+    "Final: Articles meeting inclusion criteria"
+  ),
+  N = c(
+    nrow(original),
+    nrow(original) + nrow(nouveaux_bruts),
+    nrow(nouveaux_bruts),
+    nrow(haute_pertinence),
+    nrow(final_table),
+    sum(final_table$Decision == "INCLUDE")
+  )
+)
+
+kable(summary_df, col.names = c("Step", "N articles"), align = c("l", "r")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) %>%
+  row_spec(6, bold = TRUE, background = "#d4edda")
+```
+
+## Screening Results
+
+### Article Included
+
+```{r included-article}
+included <- final_table %>% filter(Decision == "INCLUDE")
+
+if (nrow(included) > 0) {
+  cat("**PMID:**", included$PMID[1], "\n\n")
+  cat("**Year:**", included$Year[1], "\n\n")
+  cat("**Title:**", included$Title[1], "\n\n")
+  cat("**Content summary:**\n\n")
+  cat(included$Justification[1])
+}
+```
+
+### Articles Excluded (n = `r sum(final_table$Decision == "EXCLUDE")`)
+
+```{r excluded-articles}
+excluded <- final_table %>%
+  filter(Decision == "EXCLUDE") %>%
+  select(PMID, Year, Title, Justification)
+
+kable(excluded, col.names = c("PMID", "Year", "Title", "Reason for exclusion")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = TRUE) %>%
+  column_spec(3, width = "30%") %>%
+  column_spec(4, width = "40%")
+```
+
+# Cochrane Library and Google Scholar
+
+## Cochrane Library (CENTRAL)
+
+The extended search strategy was also tested on Cochrane Library using the following equation:
+
+```
+("sexual dysfunction" OR "sexual function" OR "sexual health" OR "sexuality"
+ OR "erectile dysfunction" OR "libido" OR "dyspareunia")
+AND
+("neuromuscular disease" OR "neuromuscular disorder" OR "muscular dystrophy"
+ OR "myotonic dystrophy" OR "amyotrophic lateral sclerosis" OR "motor neuron disease"
+ OR "spinal muscular atrophy" OR "myasthenia gravis" OR "Charcot-Marie-Tooth"
+ OR "dermatomyositis" OR "polymyositis" OR "myopathy" OR "polyneuropathy"
+ OR "Guillain-Barre" OR "Kennedy disease" OR "transthyretin amyloidosis"
+ OR "Duchenne" OR "Becker" OR "facioscapulohumeral" OR "limb-girdle")
+NOT ("diabetes" OR "fibromyalgia" OR "neurofibromatosis" OR "multiple sclerosis"
+ OR "cancer" OR "stroke" OR "epilepsy" OR "spinal cord injury" OR "animal model")
+```
+
+**Result**: No additional relevant articles were identified beyond those already captured by PubMed search and citation tracking.
+
+## Google Scholar
+
+Due to Google Scholar's limitations with complex Boolean queries, the search was conducted using multiple shorter queries:
+
+1. `sexuality "spinal muscular atrophy"`
+2. `sexuality "myotonic dystrophy" OR "Steinert"`
+3. `sexuality "Duchenne muscular dystrophy"`
+4. `sexuality "amyotrophic lateral sclerosis"`
+5. `sexuality "myasthenia gravis"`
+6. `sexuality "Charcot-Marie-Tooth"`
+7. `sexuality "dermatomyositis" OR "polymyositis"`
+8. `sexuality "transthyretin amyloidosis"`
+
+**Result**: No additional relevant articles were identified beyond those already captured by PubMed search and citation tracking.
+
+# Conclusion
+
+## Summary
+
+The extended search strategy using disease-specific terms identified **16 additional records** not captured by the original "neuromuscular disease/disorder" umbrella terms.
+
+After title/abstract and full-text screening:
+
+- **1 article met inclusion criteria** and was added to the review:
+  - Hausmanowa-Petrusewicz I et al. (1983). *X-linked adult form of spinal muscular atrophy.* Journal of Neurology.
+  - This article reports original data on sexual dysfunction (erectile dysfunction, reduced libido) and reproductive abnormalities (reduced fertility, testicular atrophy) in Kennedy disease (SBMA).
+
+- **15 articles were excluded** for the following reasons:
+  - Population not meeting inclusion criteria (caregivers, not patients): 1
+  - Congenital/developmental abnormalities, not sexual dysfunction: 2
+  - No specific data on sexual dysfunction reported: 7
+  - Language not meeting criteria (Russian): 1
+  - Not a primary neuromuscular disease: 1
+  - Focus on other outcomes (treatment, survival, infection): 3
+
+## Impact on Review
+
+The sensitivity analysis resulted in:
+
+- **Total included studies: 27** (26 original + 1 additional)
+- The additional study provides data on **Kennedy disease (SBMA)**, a condition not previously covered in the review
+- This strengthens the comprehensiveness of the scoping review
+
+## Response to Reviewer
+
+> *"We thank the reviewer for this important methodological point. We conducted a sensitivity analysis by expanding the search strategy to include disease-specific terms (e.g., Duchenne muscular dystrophy, myotonic dystrophy, amyotrophic lateral sclerosis, myasthenia gravis, Charcot-Marie-Tooth, etc.) in addition to the umbrella 'neuromuscular disease/disorder' terms. This extended search identified 16 additional records after deduplication. After screening, 1 article met inclusion criteria (Hausmanowa-Petrusewicz et al. 1983 on Kennedy disease/SBMA) and was added to the review, bringing the total to 27 included studies. The remaining 15 articles were excluded for reasons detailed in the supplementary material (Appendix X). Searches in Cochrane Library and Google Scholar using disease-specific terms did not identify additional relevant articles. The sensitivity analysis confirms that the original search strategy, combined with citation tracking, was largely comprehensive, with the extended search contributing one additional relevant study on a previously uncovered condition."*
+
+# Reproducibility
+
+All analyses were conducted using R version `r R.version.string`.
+
+The complete code and data are available in this repository:
+
+- `scripts/`: R scripts for PubMed search and analysis
+- `results/`: Output CSV files with all screened articles
+- `data/`: Original search equations
+
+## Session Info
+
+```{r session-info}
+sessionInfo()
+```
+
+---
+
+*This sensitivity analysis was conducted in response to peer review comments and is provided as supplementary material for transparency and reproducibility.*

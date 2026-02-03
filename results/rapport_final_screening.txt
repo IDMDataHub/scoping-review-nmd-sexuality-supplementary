@@ -1,0 +1,32 @@
+=================================================================
+RAPPORT FINAL - ARTICLES NOUVEAUX POUR SCREENING
+=================================================================
+
+Date: 2026-02-03 11:02:57
+
+--- CONTEXTE ---
+Équation originale : termes 'neuromuscular' uniquement
+Équation étendue   : + catégories (myopathy, dystrophy, etc.)
+                     + maladies spécifiques (formes longues)
+
+--- RÉSULTATS ---
+Articles haute pertinence (terme NMD dans titre) : 18
+Doublons avec les 26 articles inclus             : 2
+Articles VRAIMENT nouveaux à screener            : 16
+
+--- FICHIER GÉNÉRÉ ---
+ARTICLES_NOUVEAUX_POUR_SCREENING.csv
+
+Colonnes pour le screening :
+- Screening_Decision : INCLUDE / EXCLUDE
+- Screening_Reason   : raison de l'inclusion/exclusion
+- Relevance_Score    : 1-5 (pertinence pour la revue)
+- Notes              : commentaires libres
+
+--- POUR LE REVIEWER ---
+La stratégie étendue a identifié 16 articles additionnels
+potentiellement pertinents, qui n'avaient pas été captés par l'équation
+originale utilisant uniquement 'neuromuscular disease/disorder'.
+
+=================================================================
+

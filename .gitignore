@@ -1,0 +1,18 @@
+# R files
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj.user/
+
+# Temporary files
+*~
+*.swp
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large intermediate files (keep final results only)
+# results/pubmed_NOUVEAUX_EXCLUS.csv
+# results/pubmed_NOUVEAUX_articles.csv

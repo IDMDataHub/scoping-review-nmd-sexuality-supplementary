@@ -1,0 +1,28 @@
+=================================================================
+RAPPORT DE FILTRAGE - ARTICLES PERTINENTS NMD
+=================================================================
+
+Date : 2026-02-03 10:56:03
+
+--- RÉSULTATS ---
+Articles nouveaux (bruts)      : 301
+Articles PERTINENTS (filtrés)  : 142
+Articles exclus                : 159
+
+--- CRITÈRES DE FILTRAGE ---
+Inclusion : présence d'au moins un terme NMD spécifique
+(duchenne, becker, myotonic dystrophy, ALS, SMA, myasthenia gravis, etc.)
+
+Exclusion : articles sur myopathies/neuropathies secondaires
+(diabétiques, médicamenteuses, HIV, etc.) sans terme NMD spécifique
+
+--- FICHIERS GÉNÉRÉS ---
+1. pubmed_NOUVEAUX_PERTINENTS.csv : 142 articles
+2. pubmed_NOUVEAUX_EXCLUS.csv     : 159 articles (à vérifier)
+
+--- POUR LE REVIEWER ---
+X = 142 articles additionnels pertinents identifiés
+Y = [à compléter après screening manuel]
+
+=================================================================
+
