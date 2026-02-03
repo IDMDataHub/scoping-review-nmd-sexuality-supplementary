@@ -1,7 +1,12 @@
 #!/usr/bin/env Rscript
+# ==============================================================================
+# R Script: Create final exclusion table with justifications
+# Generates the final screening decisions for the 16 additional articles
+# ==============================================================================
+
 library(dplyr)
 
-articles <- read.csv("/home/ffer/article_audrey/output_search/ARTICLES_NOUVEAUX_POUR_SCREENING.csv", stringsAsFactors=FALSE)
+articles <- read.csv("/home/ffer/article_audrey/output_search/NEW_ARTICLES_FOR_SCREENING.csv", stringsAsFactors=FALSE)
 
 # Final exclusion table in English
 final_analysis <- data.frame(
