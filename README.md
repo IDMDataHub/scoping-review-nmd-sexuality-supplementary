@@ -12,11 +12,9 @@ This repository contains the sensitivity analysis conducted in response to peer 
 
 ## Context
 
-During peer review, a major comment was raised regarding the comprehensiveness of the search strategy:
+This repository documents a **sensitivity analysis** conducted to verify the comprehensiveness of the search strategy used in the scoping review.
 
-> *"The search strategy does not encompass specific diseases, only variations of 'neuromuscular'. This search string may therefore miss disease-specific articles [...] a revised search string would therefore need to be employed."*
-
-This repository documents our response: a **systematic sensitivity analysis** using disease-specific search terms.
+As PubMed MeSH does not include a single unified heading for all neuromuscular diseases (NMDs), articles indexed only under disease-specific terms might not be captured by umbrella "neuromuscular" terms. This analysis tests whether disease-specific search terms identify additional relevant articles.
 
 ---
 
